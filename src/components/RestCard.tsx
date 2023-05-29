@@ -7,8 +7,8 @@ interface RestCardProps {
 
 export function RestCard({ data: { name, logo } }: RestCardProps) {
   return (
-    <button className="block w-full p-6 bg-white shadow-2xl rounded-2xl overflow-hidden">
-      <div className="relative aspect-[4]">
+    <button className="block w-full p-6 bg-white shadow-xl rounded-2xl overflow-hidden">
+      <div className="relative aspect-[3]">
         <Image
           className="object-contain"
           src={`/images/${logo}`}

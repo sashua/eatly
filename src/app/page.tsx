@@ -1,4 +1,4 @@
-import { RestCard } from "~/components";
+import { DishCard, RestCard } from "~/components";
 import { prisma } from "~/lib/prisma";
 
 function getRestaurants() {
@@ -19,9 +19,9 @@ export default async function Home() {
         <h2 className="font-semibold text-2xl mb-10">
           Наші <span className="text-violet-700">Ресторани</span>
         </h2>
-        <ul className="flex gap-6">
+        <ul className="grid grid-cols-3 gap-10">
           {restaurants.map((data) => (
-            <li className="basis-1/3" key={data.id}>
+            <li key={data.id}>
               <RestCard data={data} />
             </li>
           ))}
@@ -32,10 +32,10 @@ export default async function Home() {
         <h2 className="font-semibold text-2xl mb-10">
           Наші <span className="text-violet-700">Страви</span>
         </h2>
-        <ul className="flex gap-6">
-          {restaurants.map((data) => (
-            <li className="basis-1/3" key={data.id}>
-              <RestCard data={data} />
+        <ul className="grid grid-cols-4 gap-10">
+          {dishes.map((data) => (
+            <li key={data.id}>
+              <DishCard data={data} />
             </li>
           ))}
         </ul>
