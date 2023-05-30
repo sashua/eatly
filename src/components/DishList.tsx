@@ -1,7 +1,7 @@
 "use client";
 
 import { Dish } from "@prisma/client";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import useSWRInfinite from "swr/infinite";
 import { config } from "~/lib/config";
 import { fetcher } from "~/lib/fetcher";
@@ -23,7 +23,11 @@ export function DishList({ fallbackData }: DishListProps) {
   const getKey = useCallback(
     (page: number, prevData: Dish[] | null) => {
       if (prevData && prevData.length < config.dishesPageSize) return null;
-      return getApiUrl("dishes", { ...filter, page: String(page + 1) });
+      return getApiUrl("dishes", {
+        ...filter,
+        page: String(page + 1),
+        limit: String(config.dishesPageSize),
+      });
     },
     [filter]
   );
@@ -37,14 +41,17 @@ export function DishList({ fallbackData }: DishListProps) {
     }
   );
 
+  // reset pagination if filter values've been changed
+  useEffect(() => {
+    setSize(1);
+  }, [filter, setSize]);
+
   const handleLoadMore = () => {
     setSize((size) => size + 1);
   };
 
   const dishes = data?.flat();
   const hasNextPage = (data?.at(-1)?.length ?? 0) >= config.dishesPageSize;
-
-  console.log("🚧", isValidating);
 
   return (
     <div className="space-y-10">
@@ -57,7 +64,8 @@ export function DishList({ fallbackData }: DishListProps) {
       </ul>
       {hasNextPage && (
         <Button
-          className="mx-auto"
+          className="block mx-auto"
+          variant="outline"
           disabled={isValidating}
           onClick={handleLoadMore}
         >

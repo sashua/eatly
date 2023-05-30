@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     container: { center: true, padding: "2rem" },
     fontFamily: {
-      primary: ["var(--font-golos-text)", "sans-serif"],
+      sans: ["var(--font-golos-text)", "sans-serif"],
     },
     extend: {},
   },

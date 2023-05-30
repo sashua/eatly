@@ -5,14 +5,15 @@ import { prisma } from "~/lib/prisma";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const restaurantId = searchParams.get("rest") || undefined;
-  const page = searchParams.get("page") || 1;
+  let page = Number(searchParams.get("page"));
+  let limit = Number(searchParams.get("limit"));
 
-  const skip = (Number(page) - 1) * config.dishesPageSize;
-  const take = config.dishesPageSize;
+  page = isNaN(page) ? 1 : page;
+  limit = isNaN(limit) ? config.dishesPageSize : limit;
 
   const data = await prisma.dish.findMany({
-    skip,
-    take,
+    skip: (page - 1) * limit,
+    take: limit,
     where: { restaurantId },
   });
   return NextResponse.json(data);

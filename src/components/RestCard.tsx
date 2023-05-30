@@ -24,7 +24,7 @@ export function RestCard({ data: { id, name, logo } }: RestCardProps) {
   return (
     <button
       className={clsx(
-        "group block w-full p-6 bg-white shadow-xl rounded-2xl overflow-hidden hover:bg-violet-50 transition-colors",
+        "group block w-full p-6 bg-white shadow-xl rounded-2xl overflow-hidden hover:bg-violet-100 transition-colors",
         isActive && "outline outline-violet-500/50"
       )}
       onClick={handleClick}
