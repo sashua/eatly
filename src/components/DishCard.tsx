@@ -1,8 +1,9 @@
-import { Dish } from "@prisma/client";
+import { Dish, Restaurant } from "@prisma/client";
+import clsx from "clsx";
 import Image from "next/image";
-import { MdAdd, MdDone } from "react-icons/md";
-import { formatMoney } from "~/lib/formatMoney";
+import { MdAdd, MdBlock, MdDone } from "react-icons/md";
 import { useOrderStore } from "~/lib/store";
+import { formatMoney } from "~/lib/utils";
 import { IconButton } from "./IconButton";
 
 interface DishCardProps {
@@ -10,7 +11,10 @@ interface DishCardProps {
 }
 
 export function DishCard({ data }: DishCardProps) {
-  const [isOrdered, addDish] = useOrderStore((store) => [
+  const { name, description, price, image, restaurantId } = data;
+
+  const [isDisabled, isOrdered, addDish] = useOrderStore((store) => [
+    (store.restaurantId ?? restaurantId) !== restaurantId,
     Boolean(store.dishes[data.id]),
     store.addDish,
   ]);
@@ -19,10 +23,13 @@ export function DishCard({ data }: DishCardProps) {
     addDish(data);
   };
 
-  const { name, description, price, image } = data;
-
   return (
-    <div className="flex flex-col shadow-xl rounded-2xl overflow-hidden bg-white h-full">
+    <div
+      className={clsx(
+        "flex flex-col h-full overflow-hidden bg-white shadow-xl rounded-2xl",
+        isDisabled && "opacity-50"
+      )}
+    >
       <div className="relative aspect-[3/2]">
         <Image
           className="object-cover"
@@ -31,14 +38,14 @@ export function DishCard({ data }: DishCardProps) {
           fill
         />
       </div>
-      <div className="pt-4 px-6 py-6 flex flex-col gap-4 justify-between grow">
-        <h3 className="font-semibold text-xl uppercase">{name}</h3>
+      <div className="flex flex-col justify-between gap-4 px-6 py-6 pt-4 grow">
+        <h3 className="text-xl font-semibold uppercase">{name}</h3>
         <p className="text-xs text-gray-400">{description}</p>
-        <div className="flex justify-between items-center">
-          <p className="font-semibold text-2xl">{formatMoney(price)}</p>
+        <div className="flex items-center justify-between">
+          <p className="text-2xl font-semibold">{formatMoney(price)}</p>
           <IconButton
-            icon={isOrdered ? MdDone : MdAdd}
-            disabled={isOrdered}
+            icon={isDisabled ? MdBlock : isOrdered ? MdDone : MdAdd}
+            disabled={isDisabled || isOrdered}
             onClick={handleAdd}
           />
         </div>

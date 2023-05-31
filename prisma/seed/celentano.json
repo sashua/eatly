@@ -1,5 +1,8 @@
 {
-  "restaurant": { "name": "Celentano", "logo": "1uPwOqbZJMA98fVQhMfj2.svg" },
+  "restaurant": {
+    "name": "Піца Celentano",
+    "logo": "1uPwOqbZJMA98fVQhMfj2.svg"
+  },
   "dishes": [
     {
       "name": "Піца Bianco Verde",

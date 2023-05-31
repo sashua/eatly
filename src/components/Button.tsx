@@ -8,6 +8,7 @@ interface ButtonProps extends ComponentPropsWithoutRef<"button"> {
 export function Button({
   className,
   variant = "solid",
+  type = "button",
   children,
   ...props
 }: ButtonProps) {
@@ -23,6 +24,7 @@ export function Button({
         },
         className
       )}
+      type={type}
       {...props}
     >
       {children}

@@ -11,6 +11,7 @@ interface IconButtonProps
 export function IconButton({
   className,
   variant = "solid",
+  type = "button",
   icon: Icon,
   ...props
 }: IconButtonProps) {
@@ -26,6 +27,7 @@ export function IconButton({
         },
         className
       )}
+      type={type}
       {...props}
     >
       <Icon className="w-[1.25em] h-[1.25em]" />

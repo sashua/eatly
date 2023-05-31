@@ -4,17 +4,13 @@ import { Dish } from "@prisma/client";
 import { useCallback, useEffect } from "react";
 import useSWRInfinite from "swr/infinite";
 import { config } from "~/lib/config";
-import { fetcher } from "~/lib/fetcher";
-import { getApiUrl } from "~/lib/getApiUrl";
-import { useFilterStore } from "~/lib/store";
+import { useFilterStore, usePreloadStore } from "~/lib/store";
+import { fetcher, getApiUrl } from "~/lib/utils";
 import { Button } from "./Button";
 import { DishCard } from "./DishCard";
 
-interface DishListProps {
-  fallbackData: Dish[];
-}
-
-export function DishList({ fallbackData }: DishListProps) {
+export function DishList() {
+  const preloadedDishes = usePreloadStore((store) => store.dishes);
   const [filter, updateFilter] = useFilterStore((store) => [
     store.filter,
     store.update,
@@ -36,7 +32,7 @@ export function DishList({ fallbackData }: DishListProps) {
     getKey,
     fetcher,
     {
-      fallbackData: [fallbackData],
+      fallbackData: [preloadedDishes],
       revalidateFirstPage: false,
     }
   );

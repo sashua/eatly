@@ -1,5 +1,5 @@
 import { Dish, Restaurant } from "@prisma/client";
-import { DishList, RestCard } from "~/components";
+import { DishList, PreloadStore, RestCard } from "~/components";
 
 async function getRestaurants(): Promise<Restaurant[]> {
   const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/restaurants");
@@ -11,20 +11,15 @@ async function getDishes(): Promise<Dish[]> {
   return res.json();
 }
 
-interface HomeProps {
-  searchParams: { rest?: string };
-}
-
-export default async function Home({ searchParams }: HomeProps) {
-  const { rest } = searchParams;
-
+export default async function Home() {
   const restaurants = await getRestaurants();
   const dishes = await getDishes();
 
   return (
     <>
+      <PreloadStore values={{ restaurants, dishes }} />
       <section className="pb-20 border-b">
-        <h2 className="font-semibold text-2xl mb-10">
+        <h2 className="mb-10 text-2xl font-semibold">
           Наші <span className="text-violet-700">Ресторани</span>
         </h2>
         <ul className="grid grid-cols-3 gap-10">
@@ -37,10 +32,10 @@ export default async function Home({ searchParams }: HomeProps) {
       </section>
 
       <section className="py-20 border-b">
-        <h2 className="font-semibold text-2xl mb-10">
+        <h2 className="mb-10 text-2xl font-semibold">
           Наші <span className="text-violet-700">Страви</span>
         </h2>
-        <DishList fallbackData={dishes} />
+        <DishList />
       </section>
     </>
   );
