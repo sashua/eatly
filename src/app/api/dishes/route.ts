@@ -8,8 +8,8 @@ export async function GET(request: Request) {
   let page = Number(searchParams.get("page"));
   let limit = Number(searchParams.get("limit"));
 
-  page = isNaN(page) ? 1 : page;
-  limit = isNaN(limit) ? config.dishesPageSize : limit;
+  page = isNaN(page) || page < 1 ? 1 : page;
+  limit = isNaN(limit) || limit <= 0 ? config.dishesPageSize : limit;
 
   const data = await prisma.dish.findMany({
     skip: (page - 1) * limit,

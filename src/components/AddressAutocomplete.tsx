@@ -2,33 +2,38 @@
 
 import { Combobox } from "@headlessui/react";
 import clsx from "clsx";
+import { ChangeEvent } from "react";
 import usePlacesAutocomplete, {
+  LatLng,
   getGeocode,
   getLatLng,
 } from "use-places-autocomplete";
-import { useOrderStore } from "~/lib/store";
 
 interface AddressAutocompleteProps {
   className?: string;
+  name: string;
   placeholder: string;
+  defaultValue: string;
+  required?: boolean;
+  isError?: boolean;
+  onSelect: ({ address, latLng }: { address: string; latLng: LatLng }) => void;
 }
 
 export function AddressAutocomplete({
   className,
+  name,
   placeholder,
+  defaultValue,
+  required,
+  isError,
+  onSelect,
 }: AddressAutocompleteProps) {
   const {
     ready,
-    value,
     setValue,
     suggestions: { status, data },
     clearSuggestions,
   } = usePlacesAutocomplete();
-
-  const [clientAddress, setClientLocation] = useOrderStore((store) => [
-    store.clientLocation?.address,
-    store.setClientLocation,
-  ]);
 
   const handleSelect = async (address: string) => {
     setValue(address, false);
@@ -36,24 +41,39 @@ export function AddressAutocomplete({
 
     const results = await getGeocode({ address });
     const latLng = getLatLng(results[0]);
-    setClientLocation({ address, latLng });
+    onSelect({ address, latLng });
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
   };
 
   return (
     <Combobox
       as="div"
       className={clsx("relative", className)}
-      // value={value}
+      name="name"
+      defaultValue={defaultValue}
       disabled={!ready}
       onChange={handleSelect}
-      defaultValue={clientAddress}
     >
       <Combobox.Input
-        className="w-full px-6 py-3 transition-colors bg-white border outline-none peer focus:border-violet-700 rounded-xl disabled:bg-neutral-200"
+        className={clsx(
+          "w-full px-6 py-3 transition-colors bg-white border outline-none peer rounded-xl disabled:bg-neutral-200",
+          isError
+            ? "border-red-400 focus:border-red-400"
+            : "focus:border-violet-700"
+        )}
         placeholder=" "
-        onChange={(e) => setValue(e.target.value)}
+        required={required}
+        onChange={handleChange}
       />
-      <Combobox.Label className="absolute top-0 px-1 text-xs leading-none text-gray-400 transition-all -translate-y-1/2 bg-white peer-focus:text-xs peer-focus:top-0 peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm left-5 peer-focus:text-violet-700 peer-focus:bg-white">
+      <Combobox.Label
+        className={clsx(
+          "absolute top-0 px-1 text-xs leading-none transition-all -translate-y-1/2 bg-white peer-focus:text-xs peer-focus:top-0 peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm left-5 peer-focus:bg-white",
+          isError ? "text-red-400" : "text-gray-400 peer-focus:text-violet-700"
+        )}
+      >
         {placeholder}
       </Combobox.Label>
       <Combobox.Options className="absolute inset-x-0 overflow-hidden translate-y-full shadow-md bg-violet-50 -bottom-2 rounded-xl">

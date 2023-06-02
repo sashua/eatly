@@ -9,18 +9,51 @@ datasource db {
 }
 
 model Restaurant {
-  id     String @id @default(cuid())
-  name   String
-  logo   String
+  id String @id @default(cuid())
+
+  name String
+  logo String
+
   dishes Dish[]
 }
 
 model Dish {
-  id           String     @id @default(cuid())
+  id String @id @default(cuid())
+
   name         String
   description  String
   price        Int
   image        String
   restaurantId String
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+
+  restaurant Restaurant    @relation(fields: [restaurantId], references: [id])
+  orders     OrderDishes[]
+}
+
+model Order {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name     String
+  phone    String
+  email    String?
+  address  String
+  delivery Float
+  total    Float
+
+  dishes OrderDishes[]
+}
+
+model OrderDishes {
+  orderId String
+  dishId  String
+
+  price Float
+  qty   Int
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  dish  Dish  @relation(fields: [dishId], references: [id])
+
+  @@id([orderId, dishId])
 }

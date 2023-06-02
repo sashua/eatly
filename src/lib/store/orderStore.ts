@@ -1,12 +1,19 @@
 import { Dish } from "@prisma/client";
 import { LatLng } from "use-places-autocomplete";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { config } from "../config";
 
-interface Location {
+export interface OrderLocation {
   address: string;
   latLng: LatLng;
+}
+
+interface OrderContacts {
+  name: string;
+  phone: string;
+  email: string;
 }
 
 export interface OrderDish extends Dish {
@@ -14,77 +21,99 @@ export interface OrderDish extends Dish {
 }
 
 type OrderState = {
-  restaurantId?: string;
-  restaurantLocation?: Location;
-  clientLocation?: Location;
-  deliveryRoute?: google.maps.DirectionsResult | null;
+  restaurantId: string | null;
+  contacts: OrderContacts;
+  restaurantLocation: OrderLocation | null;
+  clientLocation: OrderLocation | null;
+  deliveryRoute: google.maps.DirectionsResult | null;
   dishes: Record<OrderDish["id"], OrderDish>;
 };
 
 type OrderAction = {
-  setRestaurant: (id: string) => void;
-  setRestaurantLocation: (location?: Location) => void;
-  setClientLocation: (location?: Location) => void;
-  setDeliveryRoute: (route?: google.maps.DirectionsResult | null) => void;
+  setRestaurant: (id: string | null) => void;
+  updateContacts: (data: Partial<OrderContacts>) => void;
+  setRestaurantLocation: (location: OrderLocation | null) => void;
+  setClientLocation: (location: OrderLocation | null) => void;
+  setDeliveryRoute: (route: google.maps.DirectionsResult | null) => void;
   addDish: (dish: Dish) => void;
-  deleteDish: (id: string) => void;
   setDishQty: (id: string, qty: number) => void;
+  deleteDish: (id: string) => void;
+  clearOrder: () => void;
+};
+
+const defaultState: OrderState = {
+  restaurantId: null,
+  contacts: { name: "", phone: "", email: "" },
+  restaurantLocation: null,
+  clientLocation: null,
+  deliveryRoute: null,
+  dishes: {},
 };
 
 export const useOrderStore = create(
-  immer<OrderState & OrderAction>((set) => ({
-    dishes: {},
+  persist(
+    immer<OrderState & OrderAction>((set) => ({
+      ...defaultState,
 
-    // ---- order actions ----
-    setRestaurant: (id?) =>
-      set((store) => {
-        if (Object.keys(store.dishes).length) {
-          return;
-        }
-        store.restaurantId = id;
-      }),
+      // ---- order actions ----
+      setRestaurant: (id?) =>
+        set((store) => {
+          if (Object.keys(store.dishes).length) {
+            return;
+          }
+          store.restaurantId = id;
+        }),
 
-    setRestaurantLocation: (location?) =>
-      set((store) => {
-        store.restaurantLocation = location;
-      }),
+      updateContacts: (data) =>
+        set((store) => {
+          store.contacts = { ...store.contacts, ...data };
+        }),
 
-    setClientLocation: (location?) =>
-      set((store) => {
-        store.clientLocation = location;
-      }),
+      setRestaurantLocation: (location) =>
+        set((store) => {
+          store.restaurantLocation = location;
+        }),
 
-    setDeliveryRoute: (route?) =>
-      set((store) => {
-        store.deliveryRoute = route;
-      }),
+      setClientLocation: (location) =>
+        set((store) => {
+          store.clientLocation = location;
+        }),
 
-    // ---- dishes actions ----
-    addDish: (dish) =>
-      set((store) => {
-        if (!store.restaurantId) {
-          store.restaurantId = dish.restaurantId;
-        }
-        if (dish.restaurantId !== store.restaurantId) {
-          return;
-        }
-        store.dishes[dish.id] = { ...dish, qty: 1 };
-      }),
+      setDeliveryRoute: (route) =>
+        set((store) => {
+          store.deliveryRoute = route;
+        }),
 
-    deleteDish: (id) =>
-      set((store) => {
-        delete store.dishes[id];
-        if (!Object.keys(store.dishes).length) {
-          store.restaurantId = undefined;
-          store.restaurantLocation = undefined;
-          store.deliveryRoute = undefined;
-        }
-      }),
+      // ---- dishes actions ----
+      addDish: (dish) =>
+        set((store) => {
+          if (!store.restaurantId) {
+            store.restaurantId = dish.restaurantId;
+          }
+          if (dish.restaurantId !== store.restaurantId) {
+            return;
+          }
+          store.dishes[dish.id] = { ...dish, qty: 1 };
+        }),
 
-    setDishQty: (id, qty) =>
-      set((store) => {
-        store.dishes[id].qty =
-          qty < 1 ? 1 : qty > config.dishMaxQty ? config.dishMaxQty : qty;
-      }),
-  }))
+      deleteDish: (id) =>
+        set((store) => {
+          delete store.dishes[id];
+          if (!Object.keys(store.dishes).length) {
+            store.restaurantId = null;
+            store.restaurantLocation = null;
+            store.deliveryRoute = null;
+          }
+        }),
+
+      setDishQty: (id, qty) =>
+        set((store) => {
+          store.dishes[id].qty =
+            qty < 1 ? 1 : qty > config.dishMaxQty ? config.dishMaxQty : qty;
+        }),
+
+      clearOrder: () => set((store) => (store = { ...store, ...defaultState })),
+    })),
+    { name: "order-store" }
+  )
 );
