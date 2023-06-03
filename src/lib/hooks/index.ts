@@ -1,1 +1,1 @@
-export * from "./useClosestRestaurant";
+export * from './useClosestRestaurant';

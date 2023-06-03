@@ -1,10 +1,10 @@
-import { Dish, Restaurant } from "@prisma/client";
-import clsx from "clsx";
-import Image from "next/image";
-import { MdAdd, MdBlock, MdDone } from "react-icons/md";
-import { useOrderStore } from "~/lib/store";
-import { formatMoney } from "~/lib/utils";
-import { IconButton } from "./IconButton";
+import { Dish, Restaurant } from '@prisma/client';
+import clsx from 'clsx';
+import Image from 'next/image';
+import { MdAdd, MdBlock, MdDone } from 'react-icons/md';
+import { useOrderStore } from '~/lib/store';
+import { formatMoney } from '~/lib/utils';
+import { IconButton } from './IconButton';
 
 interface DishCardProps {
   data: Dish;
@@ -13,7 +13,7 @@ interface DishCardProps {
 export function DishCard({ data }: DishCardProps) {
   const { name, description, price, image, restaurantId } = data;
 
-  const [isDisabled, isOrdered, addDish] = useOrderStore((store) => [
+  const [isDisabled, isOrdered, addDish] = useOrderStore(store => [
     (store.restaurantId ?? restaurantId) !== restaurantId,
     Boolean(store.dishes[data.id]),
     store.addDish,
@@ -26,8 +26,8 @@ export function DishCard({ data }: DishCardProps) {
   return (
     <div
       className={clsx(
-        "flex flex-col h-full overflow-hidden bg-white shadow-xl rounded-2xl",
-        isDisabled && "opacity-50"
+        'flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-xl',
+        isDisabled && 'opacity-50'
       )}
     >
       <div className="relative aspect-[3/2]">
@@ -38,7 +38,7 @@ export function DishCard({ data }: DishCardProps) {
           fill
         />
       </div>
-      <div className="flex flex-col justify-between gap-4 px-6 py-6 pt-4 grow">
+      <div className="flex grow flex-col justify-between gap-4 px-6 py-6 pt-4">
         <h3 className="text-xl font-semibold uppercase">{name}</h3>
         <p className="text-xs text-gray-400">{description}</p>
         <div className="flex items-center justify-between">

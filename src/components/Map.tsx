@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
 import {
   DirectionsRenderer,
   DirectionsService,
   GoogleMap,
   Marker,
-} from "@react-google-maps/api";
-import { useCallback, useMemo, useState } from "react";
-import { config } from "~/lib/config";
-import { useOrderStore } from "~/lib/store";
+} from '@react-google-maps/api';
+import { useCallback, useMemo, useState } from 'react';
+import { config } from '~/lib/config';
+import { useOrderStore } from '~/lib/store';
 
 interface MapProps {
   onLoad: (map: google.maps.Map) => void;
@@ -16,7 +16,7 @@ interface MapProps {
 
 export function Map({ onLoad }: MapProps) {
   const [restaurantLatLng, clientLatLng, deliveryRoute, setDeliveryRoute] =
-    useOrderStore((store) => [
+    useOrderStore(store => [
       store.restaurantLocation?.latLng,
       store.clientLocation?.latLng,
       store.deliveryRoute,
@@ -27,7 +27,7 @@ export function Map({ onLoad }: MapProps) {
     (
       result: google.maps.DirectionsResult | null,
       status: google.maps.DirectionsStatus
-    ) => setDeliveryRoute(status === "OK" ? result : null),
+    ) => setDeliveryRoute(status === 'OK' ? result : null),
     [setDeliveryRoute]
   );
 
@@ -38,7 +38,7 @@ export function Map({ onLoad }: MapProps) {
 
   const mapOptions = useMemo(
     () => ({
-      backgroundColor: "#e7ebe5",
+      backgroundColor: '#e7ebe5',
       fullscreenControl: false,
       mapTypeControl: false,
       streetViewControl: false,

@@ -1,5 +1,5 @@
-import { Restaurant } from "@prisma/client";
-import Image from "next/image";
+import { Restaurant } from '@prisma/client';
+import Image from 'next/image';
 
 interface DeliverySummaryProps {
   restaurant?: Restaurant;
@@ -13,12 +13,12 @@ export function DeliverySummary({
   summary,
 }: DeliverySummaryProps) {
   return (
-    <div className="px-6 pt-10 pb-6 text-white bg-gray-800 rounded-t-3xl">
+    <div className="rounded-t-3xl bg-gray-800 px-6 pb-6 pt-10 text-white">
       <div className="flex items-start justify-between gap-4">
-        <div className="relative aspect-[3] basis-1/5 shrink-0">
+        <div className="relative aspect-[3] shrink-0 basis-1/5">
           {restaurant && (
             <Image
-              className="object-contain invert grayscale"
+              className="object-contain grayscale invert"
               src={`/images/${restaurant.logo}`}
               alt={restaurant.name}
               fill
@@ -26,9 +26,9 @@ export function DeliverySummary({
           )}
         </div>
         {restaurantAddress && (
-          <div className="space-y-1 text-center basis-1/2 shrink-0">
+          <div className="shrink-0 basis-1/2 space-y-1 text-center">
             <h5 className="text-sm text-gray-400">Найближчий ресторан</h5>
-            <p className="text-xs font-light line-clamp-1">
+            <p className="line-clamp-1 text-xs font-light">
               {restaurantAddress}
             </p>
           </div>
@@ -36,7 +36,7 @@ export function DeliverySummary({
         {summary && (
           <div className="space-y-1 text-center">
             <h5 className="text-sm text-gray-400">Доставка</h5>
-            <p className="text-xs font-light line-clamp-2">{summary}</p>
+            <p className="line-clamp-2 text-xs font-light">{summary}</p>
           </div>
         )}
       </div>

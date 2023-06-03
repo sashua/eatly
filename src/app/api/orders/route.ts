@@ -1,6 +1,6 @@
-import console from "console";
-import { NextResponse } from "next/server";
-import { prisma } from "~/lib/prisma";
+import console from 'console';
+import { NextResponse } from 'next/server';
+import { prisma } from '~/lib/prisma';
 
 export async function POST(request: Request) {
   const { dishes, ...orderData } = await request.json();
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     },
     include: { dishes: true },
   });
-  console.log("🚧 res:", res);
+  console.log('🚧 res:', res);
 
   return NextResponse.json(res);
 }

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Restaurant } from "@prisma/client";
-import clsx from "clsx";
-import Image from "next/image";
-import { useFilterStore, useOrderStore } from "~/lib/store";
+import { Restaurant } from '@prisma/client';
+import clsx from 'clsx';
+import Image from 'next/image';
+import { useFilterStore, useOrderStore } from '~/lib/store';
 
 interface RestCardProps {
   data: Restaurant;
@@ -12,24 +12,24 @@ interface RestCardProps {
 export function RestCard({ data }: RestCardProps) {
   const { id, name, logo } = data;
 
-  const [isSelected, updateFilter] = useFilterStore((store) => [
+  const [isSelected, updateFilter] = useFilterStore(store => [
     store.filter.rest === id,
     store.update,
   ]);
-  const [isDisabled, setOrderRestaurant] = useOrderStore((store) => [
+  const [isDisabled, setOrderRestaurant] = useOrderStore(store => [
     (store.restaurantId ?? id) !== id,
     store.setRestaurant,
   ]);
 
   const handleClick = () => {
-    updateFilter({ rest: isSelected ? "" : id });
+    updateFilter({ rest: isSelected ? '' : id });
   };
 
   return (
     <button
       className={clsx(
-        "group block w-full p-6 bg-white shadow-xl rounded-2xl hover:bg-violet-100 transition-colors disabled:bg-white disabled:opacity-50",
-        isSelected && "outline outline-2 outline-violet-500/50"
+        'group block w-full rounded-2xl bg-white p-6 shadow-xl transition-colors hover:bg-violet-100 disabled:bg-white disabled:opacity-50',
+        isSelected && 'outline outline-2 outline-violet-500/50'
       )}
       disabled={isDisabled}
       onClick={handleClick}

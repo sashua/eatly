@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Combobox } from "@headlessui/react";
-import clsx from "clsx";
-import { ChangeEvent } from "react";
+import { Combobox } from '@headlessui/react';
+import clsx from 'clsx';
+import { ChangeEvent } from 'react';
 import usePlacesAutocomplete, {
   LatLng,
   getGeocode,
   getLatLng,
-} from "use-places-autocomplete";
+} from 'use-places-autocomplete';
 
 interface AddressAutocompleteProps {
   className?: string;
@@ -51,7 +51,7 @@ export function AddressAutocomplete({
   return (
     <Combobox
       as="div"
-      className={clsx("relative", className)}
+      className={clsx('relative', className)}
       name="name"
       defaultValue={defaultValue}
       disabled={!ready}
@@ -59,10 +59,10 @@ export function AddressAutocomplete({
     >
       <Combobox.Input
         className={clsx(
-          "w-full px-6 py-3 transition-colors bg-white border outline-none peer rounded-xl disabled:bg-neutral-200",
+          'peer w-full rounded-xl border bg-white px-6 py-3 outline-none transition-colors disabled:bg-neutral-200',
           isError
-            ? "border-red-400 focus:border-red-400"
-            : "focus:border-violet-700"
+            ? 'border-red-400 focus:border-red-400'
+            : 'focus:border-violet-700'
         )}
         placeholder=" "
         required={required}
@@ -70,17 +70,17 @@ export function AddressAutocomplete({
       />
       <Combobox.Label
         className={clsx(
-          "absolute top-0 px-1 text-xs leading-none transition-all -translate-y-1/2 bg-white peer-focus:text-xs peer-focus:top-0 peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm left-5 peer-focus:bg-white",
-          isError ? "text-red-400" : "text-gray-400 peer-focus:text-violet-700"
+          'absolute left-5 top-0 -translate-y-1/2 bg-white px-1 text-xs leading-none transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:bg-white peer-focus:text-xs',
+          isError ? 'text-red-400' : 'text-gray-400 peer-focus:text-violet-700'
         )}
       >
         {placeholder}
       </Combobox.Label>
-      <Combobox.Options className="absolute inset-x-0 overflow-hidden translate-y-full shadow-md bg-violet-50 -bottom-2 rounded-xl">
-        {status === "OK" &&
+      <Combobox.Options className="absolute inset-x-0 -bottom-2 translate-y-full overflow-hidden rounded-xl bg-violet-50 shadow-md">
+        {status === 'OK' &&
           data.map(({ place_id, description }) => (
             <Combobox.Option
-              className="px-6 py-1.5 text-gray-500 transition-colors cursor-pointer line-clamp-1 ui-active:text-violet-800 ui-active:bg-violet-200"
+              className="line-clamp-1 cursor-pointer px-6 py-1.5 text-gray-500 transition-colors ui-active:bg-violet-200 ui-active:text-violet-800"
               key={place_id}
               value={description}
             >

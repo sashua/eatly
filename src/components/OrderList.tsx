@@ -1,6 +1,6 @@
-import { OrderDish } from "~/lib/store";
-import { formatMoney } from "~/lib/utils";
-import { OrderCard } from "./OrderCard";
+import { OrderDish } from '~/lib/store';
+import { formatMoney } from '~/lib/utils';
+import { OrderCard } from './OrderCard';
 
 interface OrderListProps {
   dishes: OrderDish[];
@@ -18,7 +18,7 @@ export function OrderList({
   return (
     <>
       <ul className="space-y-4">
-        {dishes.map((dish) => (
+        {dishes.map(dish => (
           <li key={dish.id}>
             <OrderCard data={dish} />
           </li>

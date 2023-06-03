@@ -1,13 +1,13 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
 export function Logo() {
   return (
     <Link
-      className="flex items-center gap-3 text-violet-700 text-2xl font-semibold"
+      className="flex items-center gap-3 text-2xl font-semibold text-violet-700"
       href="/"
     >
-      <div className="relative basis-10 shrink-0 aspect-square">
+      <div className="relative aspect-square shrink-0 basis-10">
         <Image src="/logo.svg" alt="Виделка й ніж" fill />
       </div>
       Їжмо!

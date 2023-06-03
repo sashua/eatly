@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { useLoadScript } from "@react-google-maps/api";
-import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
-import useSWRMutation from "swr/mutation";
-import { config } from "~/lib/config";
-import { useClosestRestaurant } from "~/lib/hooks";
-import { useOrderStore } from "~/lib/store";
-import { getApiUrl, sendRequest } from "~/lib/utils";
-import { AddressAutocomplete } from "./AddressAutocomplete";
-import { Button } from "./Button";
-import { DeliverySummary } from "./DeliverySummary";
-import { Input } from "./Input";
-import { Map } from "./Map";
-import { OrderList } from "./OrderList";
+import { useLoadScript } from '@react-google-maps/api';
+import { useRouter } from 'next/navigation';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import useSWRMutation from 'swr/mutation';
+import { config } from '~/lib/config';
+import { useClosestRestaurant } from '~/lib/hooks';
+import { useOrderStore } from '~/lib/store';
+import { getApiUrl, sendRequest } from '~/lib/utils';
+import { AddressAutocomplete } from './AddressAutocomplete';
+import { Button } from './Button';
+import { DeliverySummary } from './DeliverySummary';
+import { Input } from './Input';
+import { Map } from './Map';
+import { OrderList } from './OrderList';
 
-const libraries = ["places"] as "places"[];
-const postUrl = getApiUrl("orders");
+const libraries = ['places'] as 'places'[];
+const postUrl = getApiUrl('orders');
 
 export function OrderForm() {
   // ---- load google maps ----
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
-    language: "uk",
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? '',
+    language: 'uk',
     libraries: libraries,
   });
   const [map, setMap] = useState<google.maps.Map>();
@@ -37,7 +37,7 @@ export function OrderForm() {
     updateContacts,
     setClientLocation,
     clearOrder,
-  ] = useOrderStore((store) => [
+  ] = useOrderStore(store => [
     store.contacts,
     store.clientLocation,
     Object.values(store.dishes),
@@ -73,7 +73,7 @@ export function OrderForm() {
     try {
       await trigger(data);
       clearOrder();
-      router.push("/");
+      router.push('/');
     } catch (e) {
       console.log(e);
     }
@@ -82,22 +82,22 @@ export function OrderForm() {
   return (
     <form autoComplete="off" onSubmit={handleSubmit}>
       <div className="relative">
-        <div className="overflow-hidden bg-gray-200 rounded-2xl aspect-video">
+        <div className="aspect-video overflow-hidden rounded-2xl bg-gray-200">
           {isLoaded && <Map onLoad={setMap} />}
         </div>
-        <div className="absolute bottom-0 w-full max-w-lg -translate-x-1/2 translate-y-1/2 bg-white shadow-xl rounded-3xl left-1/2">
+        <div className="absolute bottom-0 left-1/2 w-full max-w-lg -translate-x-1/2 translate-y-1/2 rounded-3xl bg-white shadow-xl">
           <DeliverySummary
             restaurant={restaurant}
             restaurantAddress={restaurantLocation?.address}
-            summary={duration ? `${duration?.text}(${distance?.text})` : ""}
+            summary={duration ? `${duration?.text}(${distance?.text})` : ''}
           />
-          <div className="flex flex-col gap-4 px-6 pt-6 pb-10">
+          <div className="flex flex-col gap-4 px-6 pb-10 pt-6">
             {isLoaded ? (
               <AddressAutocomplete
                 className="z-30"
                 name="address"
                 placeholder="Адреса доставки"
-                defaultValue={clientLoaction?.address ?? ""}
+                defaultValue={clientLoaction?.address ?? ''}
                 required
                 onSelect={setClientLocation}
               />
@@ -129,7 +129,7 @@ export function OrderForm() {
           </div>
         </div>
       </div>
-      <div className="max-w-2xl mx-auto mt-64 space-y-10">
+      <div className="mx-auto mt-64 max-w-2xl space-y-10">
         <OrderList
           dishes={dishes}
           subtotal={subtotal}
@@ -141,7 +141,7 @@ export function OrderForm() {
           type="submit"
           disabled={dishes.length < 1 || isMutating}
         >
-          {isMutating ? "Зачекайте..." : "Підтвердити замовлення"}
+          {isMutating ? 'Зачекайте...' : 'Підтвердити замовлення'}
         </Button>
       </div>
     </form>

@@ -1,5 +1,5 @@
-import { Dish, Restaurant } from "@prisma/client";
-import { create } from "zustand";
+import { Dish, Restaurant } from '@prisma/client';
+import { create } from 'zustand';
 
 export type PreloadState = {
   restaurants: Restaurant[];
@@ -10,8 +10,8 @@ type PreloadAction = {
   set: (values: PreloadState) => void;
 };
 
-export const usePreloadStore = create<PreloadState & PreloadAction>((set) => ({
+export const usePreloadStore = create<PreloadState & PreloadAction>(set => ({
   restaurants: [],
   dishes: [],
-  set: (values) => set(() => ({ ...values })),
+  set: values => set(() => ({ ...values })),
 }));

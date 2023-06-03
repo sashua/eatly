@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
-import celentano from "./celentano.json";
-import kfc from "./kfc.json";
-import lvivcroissants from "./lvivcroissants.json";
+import celentano from './celentano.json';
+import kfc from './kfc.json';
+import lvivcroissants from './lvivcroissants.json';
 
 const prisma = new PrismaClient();
 
@@ -15,17 +15,17 @@ async function main() {
       const newRest = await prisma.restaurant.create({
         data: { ...restaurant, dishes: { create: dishes } },
       });
-      console.log("🚧", newRest);
+      console.log('🚧', newRest);
     })
   );
-  console.log("🚧", "DONE");
+  console.log('🚧', 'DONE');
 }
 
 main()
   .then(async () => {
     await prisma.$disconnect();
   })
-  .catch(async (e) => {
+  .catch(async e => {
     console.error(e);
     await prisma.$disconnect();
     process.exit(1);

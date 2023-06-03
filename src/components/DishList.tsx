@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Dish } from "@prisma/client";
-import { useCallback, useEffect } from "react";
-import useSWRInfinite from "swr/infinite";
-import { config } from "~/lib/config";
-import { useFilterStore, usePreloadStore } from "~/lib/store";
-import { fetcher, getApiUrl } from "~/lib/utils";
-import { Button } from "./Button";
-import { DishCard } from "./DishCard";
+import { Dish } from '@prisma/client';
+import { useCallback, useEffect } from 'react';
+import useSWRInfinite from 'swr/infinite';
+import { config } from '~/lib/config';
+import { useFilterStore, usePreloadStore } from '~/lib/store';
+import { fetcher, getApiUrl } from '~/lib/utils';
+import { Button } from './Button';
+import { DishCard } from './DishCard';
 
 export function DishList() {
-  const preloadedDishes = usePreloadStore((store) => store.dishes);
-  const [filter, updateFilter] = useFilterStore((store) => [
+  const preloadedDishes = usePreloadStore(store => store.dishes);
+  const [filter, updateFilter] = useFilterStore(store => [
     store.filter,
     store.update,
   ]);
@@ -19,7 +19,7 @@ export function DishList() {
   const getKey = useCallback(
     (page: number, prevData: Dish[] | null) => {
       if (prevData && prevData.length < config.dishesPageSize) return null;
-      return getApiUrl("dishes", {
+      return getApiUrl('dishes', {
         ...filter,
         page: String(page + 1),
         limit: String(config.dishesPageSize),
@@ -43,7 +43,7 @@ export function DishList() {
   }, [filter, setSize]);
 
   const handleLoadMore = () => {
-    setSize((size) => size + 1);
+    setSize(size => size + 1);
   };
 
   const dishes = data?.flat();
@@ -52,7 +52,7 @@ export function DishList() {
   return (
     <div className="space-y-10">
       <ul className="grid grid-cols-4 gap-10">
-        {dishes?.map((data) => (
+        {dishes?.map(data => (
           <li key={data.id}>
             <DishCard data={data} />
           </li>
@@ -60,12 +60,12 @@ export function DishList() {
       </ul>
       {hasNextPage && (
         <Button
-          className="block mx-auto"
+          className="mx-auto block"
           variant="outline"
           disabled={isValidating}
           onClick={handleLoadMore}
         >
-          {isValidating ? "Зачекайте..." : "Більше страв"}
+          {isValidating ? 'Зачекайте...' : 'Більше страв'}
         </Button>
       )}
     </div>

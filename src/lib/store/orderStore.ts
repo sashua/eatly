@@ -1,9 +1,9 @@
-import { Dish } from "@prisma/client";
-import { LatLng } from "use-places-autocomplete";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { immer } from "zustand/middleware/immer";
-import { config } from "../config";
+import { Dish } from '@prisma/client';
+import { LatLng } from 'use-places-autocomplete';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { immer } from 'zustand/middleware/immer';
+import { config } from '../config';
 
 export interface OrderLocation {
   address: string;
@@ -26,7 +26,7 @@ type OrderState = {
   restaurantLocation: OrderLocation | null;
   clientLocation: OrderLocation | null;
   deliveryRoute: google.maps.DirectionsResult | null;
-  dishes: Record<OrderDish["id"], OrderDish>;
+  dishes: Record<OrderDish['id'], OrderDish>;
 };
 
 type OrderAction = {
@@ -43,7 +43,7 @@ type OrderAction = {
 
 const defaultState: OrderState = {
   restaurantId: null,
-  contacts: { name: "", phone: "", email: "" },
+  contacts: { name: '', phone: '', email: '' },
   restaurantLocation: null,
   clientLocation: null,
   deliveryRoute: null,
@@ -52,41 +52,41 @@ const defaultState: OrderState = {
 
 export const useOrderStore = create(
   persist(
-    immer<OrderState & OrderAction>((set) => ({
+    immer<OrderState & OrderAction>(set => ({
       ...defaultState,
 
       // ---- order actions ----
       setRestaurant: (id?) =>
-        set((store) => {
+        set(store => {
           if (Object.keys(store.dishes).length) {
             return;
           }
           store.restaurantId = id;
         }),
 
-      updateContacts: (data) =>
-        set((store) => {
+      updateContacts: data =>
+        set(store => {
           store.contacts = { ...store.contacts, ...data };
         }),
 
-      setRestaurantLocation: (location) =>
-        set((store) => {
+      setRestaurantLocation: location =>
+        set(store => {
           store.restaurantLocation = location;
         }),
 
-      setClientLocation: (location) =>
-        set((store) => {
+      setClientLocation: location =>
+        set(store => {
           store.clientLocation = location;
         }),
 
-      setDeliveryRoute: (route) =>
-        set((store) => {
+      setDeliveryRoute: route =>
+        set(store => {
           store.deliveryRoute = route;
         }),
 
       // ---- dishes actions ----
-      addDish: (dish) =>
-        set((store) => {
+      addDish: dish =>
+        set(store => {
           if (!store.restaurantId) {
             store.restaurantId = dish.restaurantId;
           }
@@ -96,8 +96,8 @@ export const useOrderStore = create(
           store.dishes[dish.id] = { ...dish, qty: 1 };
         }),
 
-      deleteDish: (id) =>
-        set((store) => {
+      deleteDish: id =>
+        set(store => {
           delete store.dishes[id];
           if (!Object.keys(store.dishes).length) {
             store.restaurantId = null;
@@ -107,13 +107,13 @@ export const useOrderStore = create(
         }),
 
       setDishQty: (id, qty) =>
-        set((store) => {
+        set(store => {
           store.dishes[id].qty =
             qty < 1 ? 1 : qty > config.dishMaxQty ? config.dishMaxQty : qty;
         }),
 
-      clearOrder: () => set((store) => (store = { ...store, ...defaultState })),
+      clearOrder: () => set(store => (store = { ...store, ...defaultState })),
     })),
-    { name: "order-store" }
+    { name: 'order-store' }
   )
 );

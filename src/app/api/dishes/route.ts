@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
-import { config } from "~/lib/config";
-import { prisma } from "~/lib/prisma";
+import { NextResponse } from 'next/server';
+import { config } from '~/lib/config';
+import { prisma } from '~/lib/prisma';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const restaurantId = searchParams.get("rest") || undefined;
-  let page = Number(searchParams.get("page"));
-  let limit = Number(searchParams.get("limit"));
+  const restaurantId = searchParams.get('rest') || undefined;
+  let page = Number(searchParams.get('page'));
+  let limit = Number(searchParams.get('limit'));
 
   page = isNaN(page) || page < 1 ? 1 : page;
   limit = isNaN(limit) || limit <= 0 ? config.dishesPageSize : limit;
