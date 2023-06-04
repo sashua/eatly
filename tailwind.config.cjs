@@ -26,7 +26,7 @@ module.exports = {
         950: '#2a2640',
       },
       neutral: {
-        DEFAULT: '',
+        DEFAULT: '#515151',
         50: '#f7f7f7',
         100: '#e3e3e3',
         200: '#c8c8c8',

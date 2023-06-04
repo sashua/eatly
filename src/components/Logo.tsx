@@ -11,15 +11,15 @@ const logo = tv({
     size: {
       sm: {
         base: 'text-xl',
-        imageWrap: 'basis-10',
+        imageWrap: 'w-10',
       },
       md: {
         base: 'text-2xl',
-        imageWrap: 'basis-12',
+        imageWrap: 'w-12',
       },
       lg: {
         base: 'text-3xl',
-        imageWrap: 'basis-14',
+        imageWrap: 'w-14',
       },
     },
   },
@@ -28,17 +28,19 @@ const logo = tv({
 
 type LogoVariants = VariantProps<typeof logo>;
 
-interface LogoProps extends LogoVariants {}
+interface LogoProps extends LogoVariants {
+  className?: string;
+}
 
-export function Logo({ size }: LogoProps) {
+export function Logo({ className, size }: LogoProps) {
   const classes = logo({ size });
 
   return (
-    <Link className={classes.base()} href="/">
+    <Link className={classes.base({ className })} href="/">
       <div className={classes.imageWrap()}>
-        <Image src="/logo.svg" alt="Логотип" fill />
+        <Image src="/logo.svg" alt="Company logo" fill />
       </div>
-      Їжмо!
+      <span>eatly</span>
     </Link>
   );
 }

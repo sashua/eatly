@@ -1,17 +1,13 @@
-import Link from 'next/link';
-import { Logo } from './Logo';
+import { Logo, Navigation } from '~/components';
 
 export function Header() {
   return (
     <header>
       <div className="container">
-        <nav className="flex border-b py-6">
-          <Logo />
-          <div className="ml-auto flex gap-10">
-            <Link href="/">Меню</Link>
-            <Link href="/cart">Кошик</Link>
-          </div>
-        </nav>
+        <div className="flex items-center border-b pb-6 pt-12">
+          <Logo className="mr-20" />
+          <Navigation className="text-neutral-500" />
+        </div>
       </div>
     </header>
   );

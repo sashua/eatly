@@ -9,8 +9,7 @@ const golosText = Golos_Text({
 });
 
 export const metadata = {
-  title: 'Їжмо!',
-  description: 'Доставка їжі з ресторанів',
+  title: 'Eatly',
 };
 
 type RootLayoutProps = {
@@ -20,9 +19,9 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="uk" className={`${golosText.variable}`}>
-      <body className="flex min-h-screen flex-col bg-gray-50 font-sans text-gray-800">
+      <body className="flex min-h-screen flex-col bg-neutral-50 font-sans text-neutral-950">
         <Header />
-        <main className="grow py-20">
+        <main className="grow py-28">
           <div className="container">{children}</div>
         </main>
         <Footer />

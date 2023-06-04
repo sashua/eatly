@@ -1,12 +1,16 @@
-import { Logo } from './Logo';
+import { Logo, Navigation } from '~/components';
 
-interface FooterProps {}
-
-export function Footer({}: FooterProps) {
+export function Footer() {
   return (
-    <footer className="bg-gray-200 py-6">
+    <footer className="bg-neutral-100 py-20">
       <div className="container">
-        <Logo size="lg" />
+        <div className="mb-12 flex items-center justify-between border-b pb-6">
+          <Logo size="lg" />
+          <Navigation className="text-neutral-300" />
+        </div>
+        <div>
+          <p className="text-neutral-300">© 2023 EATLY All Rights Reserved</p>
+        </div>
       </div>
     </footer>
   );
