@@ -11,6 +11,9 @@ module.exports = {
       DEFAULT: theme('colors.neutral.200', 'currentColor'),
     }),
     colors: {
+      white: '#fff',
+      black: '#000',
+      curren: 'currentColor',
       brand: {
         DEFAULT: '#6c5fbc',
         50: '#f2f3fb',

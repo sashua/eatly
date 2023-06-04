@@ -21,7 +21,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="uk" className={`${golosText.variable}`}>
       <body className="flex min-h-screen flex-col bg-neutral-50 font-sans text-neutral-950">
         <Header />
-        <main className="grow py-28">
+        <main className="grow">
           <div className="container">{children}</div>
         </main>
         <Footer />

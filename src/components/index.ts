@@ -5,6 +5,7 @@ export * from './DishCard';
 export * from './DishList';
 export * from './Footer';
 export * from './Header';
+export * from './Hero';
 export * from './IconButton';
 export * from './Input';
 export * from './Logo';
