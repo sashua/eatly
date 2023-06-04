@@ -6,7 +6,7 @@ export function Footer({}: FooterProps) {
   return (
     <footer className="bg-gray-200 py-6">
       <div className="container">
-        <Logo />
+        <Logo size="lg" />
       </div>
     </footer>
   );

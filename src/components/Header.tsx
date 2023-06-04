@@ -1,9 +1,7 @@
 import Link from 'next/link';
 import { Logo } from './Logo';
 
-interface HeaderProps {}
-
-export function Header({}: HeaderProps) {
+export function Header() {
   return (
     <header>
       <div className="container">

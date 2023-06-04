@@ -18,7 +18,7 @@ export default async function Home() {
   return (
     <>
       <PreloadStore values={{ restaurants, dishes }} />
-      <section className="border-b pb-20">
+      {/* <section className="border-b pb-20">
         <h2 className="mb-10 text-2xl font-semibold">
           Наші <span className="text-violet-700">Ресторани</span>
         </h2>
@@ -36,7 +36,7 @@ export default async function Home() {
           Наші <span className="text-violet-700">Страви</span>
         </h2>
         <DishList />
-      </section>
+      </section> */}
     </>
   );
 }
