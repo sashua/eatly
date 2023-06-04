@@ -15,41 +15,46 @@ model Restaurant {
   logo String
 
   dishes Dish[]
+  orders Order[]
 }
 
 model Dish {
   id String @id @default(cuid())
 
+  restaurantId String
   name         String
   description  String
-  price        Int
   image        String
-  restaurantId String
+  price        Int
 
-  restaurant Restaurant    @relation(fields: [restaurantId], references: [id])
-  orders     OrderDishes[]
+  restaurant Restaurant  @relation(fields: [restaurantId], references: [id])
+  orders     OrderDish[]
 }
 
 model Order {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
+
+  customerName    String
+  customerEmail   String
+  deliveryAddress String
+
+  restaurantId      String
+  restaurantAddress String
+  deliveryCost      Int
+  totalSum          Int
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name     String
-  phone    String
-  email    String?
-  address  String
-  delivery Float
-  total    Float
-
-  dishes OrderDishes[]
+  restaurant Restaurant  @relation(fields: [restaurantId], references: [id])
+  dishes     OrderDish[]
 }
 
-model OrderDishes {
+model OrderDish {
   orderId String
   dishId  String
 
-  price Float
+  price Int
   qty   Int
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
