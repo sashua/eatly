@@ -1,5 +1,12 @@
 import { Dish, Restaurant } from '@prisma/client';
-import { DishList, Hero, PreloadStore, RestCard } from '~/components';
+import {
+  DishList,
+  Hero,
+  PreloadStore,
+  RestCard,
+  Statistics,
+  Subscription,
+} from '~/components';
 
 async function getRestaurants(): Promise<Restaurant[]> {
   const res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/restaurants');
@@ -19,6 +26,8 @@ export default async function Home() {
     <>
       <PreloadStore values={{ restaurants, dishes }} />
       <Hero />
+      <Statistics />
+      <Subscription />
       {/* <section className="border-b pb-20">
         <h2 className="mb-10 text-2xl font-semibold">
           Наші <span className="text-violet-700">Ресторани</span>

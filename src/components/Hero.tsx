@@ -21,7 +21,7 @@ export function Hero() {
         <div className="basis-1/2 bg-right-top bg-no-repeat px-20 [background-image:url(/arrow-1.svg)] [background-size:25%]">
           <div className="overflow-hidden rounded-full bg-brand">
             <div className="relative aspect-square">
-              <Image src="/hero.png" alt="Some dish" fill />
+              <Image src="/food-1.png" alt="Some food" fill />
             </div>
           </div>
         </div>

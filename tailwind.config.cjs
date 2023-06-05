@@ -13,6 +13,7 @@ module.exports = {
     colors: {
       white: '#fff',
       black: '#000',
+      transparent: 'transparent',
       curren: 'currentColor',
       brand: {
         DEFAULT: '#6c5fbc',
