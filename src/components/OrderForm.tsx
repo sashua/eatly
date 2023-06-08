@@ -3,7 +3,6 @@
 import { useLoadScript } from '@react-google-maps/api';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import useSWRMutation from 'swr/mutation';
 import { config } from '~/lib/config';
 import { useClosestRestaurant } from '~/lib/hooks';
 import { useOrderStore } from '~/lib/store';
@@ -45,7 +44,6 @@ export function OrderForm() {
     store.setClientLocation,
     store.clearOrder,
   ]);
-  const { trigger, isMutating } = useSWRMutation(postUrl, sendRequest);
   const router = useRouter();
 
   // ---- calculate order totals ----
@@ -71,7 +69,6 @@ export function OrderForm() {
     };
 
     try {
-      await trigger(data);
       clearOrder();
       router.push('/');
     } catch (e) {
@@ -82,7 +79,7 @@ export function OrderForm() {
   return (
     <form autoComplete="off" onSubmit={handleSubmit}>
       <div className="relative">
-        <div className="aspect-video overflow-hidden rounded-2xl bg-gray-200">
+        <div className="bg-gray-200 aspect-video overflow-hidden rounded-2xl">
           {isLoaded && <Map onLoad={setMap} />}
         </div>
         <div className="absolute bottom-0 left-1/2 w-full max-w-lg -translate-x-1/2 translate-y-1/2 rounded-3xl bg-white shadow-xl">
@@ -139,9 +136,9 @@ export function OrderForm() {
         <Button
           className="w-full font-semibold"
           type="submit"
-          disabled={dishes.length < 1 || isMutating}
+          disabled={dishes.length < 1 || false}
         >
-          {isMutating ? 'Зачекайте...' : 'Підтвердити замовлення'}
+          {false ? 'Зачекайте...' : 'Підтвердити замовлення'}
         </Button>
       </div>
     </form>

@@ -1,36 +1,51 @@
-import clsx from 'clsx';
 import { ComponentPropsWithoutRef } from 'react';
 import { IconType } from 'react-icons';
+import { tv, type VariantProps } from 'tailwind-variants';
+
+const iconButton = tv({
+  slots: {
+    base: 'border-brand text-brand transition-colors hover:border-brand-700 hover:bg-brand-700 hover:text-white active:border-brand active:bg-brand disabled:border-neutral disabled:text-neutral disabled:shadow-none',
+    icon: 'h-[1.5em] w-[1.5em]',
+  },
+  variants: {
+    size: {
+      sm: {
+        base: 'rounded-full border p-1 shadow-sm',
+        icon: 'h-[1em] w-[1em]',
+      },
+      md: {
+        base: 'rounded-lg border p-1.5 shadow',
+        icon: 'h-[1.25em] w-[1.25em]',
+      },
+      lg: {
+        base: 'rounded-xl border-2 p-1.5 shadow-md',
+        icon: 'h-[1.5em] w-[1.5em]',
+      },
+    },
+  },
+  defaultVariants: { size: 'md' },
+});
+
+type ButtonVariants = VariantProps<typeof iconButton>;
 
 interface IconButtonProps
-  extends Omit<ComponentPropsWithoutRef<'button'>, 'children'> {
-  variant?: 'solid' | 'outline';
+  extends ButtonVariants,
+    Omit<ComponentPropsWithoutRef<'button'>, 'children'> {
   icon: IconType;
 }
 
 export function IconButton({
   className,
-  variant = 'solid',
+  size,
   type = 'button',
   icon: Icon,
   ...props
 }: IconButtonProps) {
+  const classes = iconButton({ size });
+
   return (
-    <button
-      className={clsx(
-        'rounded-xl border border-gray-700 p-2 shadow transition-colors hover:border-gray-600 active:border-gray-700 disabled:border-gray-400 disabled:shadow-none',
-        {
-          'bg-gray-700 text-white hover:bg-gray-600 active:bg-gray-700 disabled:bg-gray-400':
-            variant === 'solid',
-          'text-gray-700 hover:bg-gray-100 active:bg-white disabled:bg-white disabled:text-gray-400':
-            variant === 'outline',
-        },
-        className
-      )}
-      type={type}
-      {...props}
-    >
-      <Icon className="h-[1.25em] w-[1.25em]" />
+    <button className={classes.base({ className })} type={type} {...props}>
+      <Icon className={classes.icon()} />
     </button>
   );
 }

@@ -11,8 +11,10 @@ datasource db {
 model Restaurant {
   id String @id @default(cuid())
 
-  name String
-  logo String
+  name        String
+  description String
+  logo        String
+  image       String
 
   dishes Dish[]
   orders Order[]

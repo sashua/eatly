@@ -1,71 +1,44 @@
 'use client';
 
 import { Dish } from '@prisma/client';
-import { useCallback, useEffect } from 'react';
-import useSWRInfinite from 'swr/infinite';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { MdArrowDownward } from 'react-icons/md';
+import { Button, DishCard } from '~/components';
+import { getDishes } from '~/lib/api';
 import { config } from '~/lib/config';
-import { useFilterStore, usePreloadStore } from '~/lib/store';
-import { fetcher, getApiUrl } from '~/lib/utils';
-import { Button } from './Button';
-import { DishCard } from './DishCard';
+import { SearchDishes } from '~/lib/schemas';
 
-export function DishList() {
-  const preloadedDishes = usePreloadStore(store => store.dishes);
-  const [filter, updateFilter] = useFilterStore(store => [
-    store.filter,
-    store.update,
-  ]);
+interface DishListProps {
+  searchParams?: SearchDishes;
+  initialData: Dish[];
+}
 
-  const getKey = useCallback(
-    (page: number, prevData: Dish[] | null) => {
-      if (prevData && prevData.length < config.dishesPageSize) return null;
-      return getApiUrl('dishes', {
-        ...filter,
-        page: String(page + 1),
-        limit: String(config.dishesPageSize),
-      });
-    },
-    [filter]
-  );
-
-  const { data, isValidating, setSize } = useSWRInfinite<Dish[]>(
-    getKey,
-    fetcher,
-    {
-      fallbackData: [preloadedDishes],
-      revalidateFirstPage: false,
-    }
-  );
-
-  // reset pagination if filter values've been changed
-  useEffect(() => {
-    setSize(1);
-  }, [filter, setSize]);
-
-  const handleLoadMore = () => {
-    setSize(size => size + 1);
-  };
-
-  const dishes = data?.flat();
-  const hasNextPage = (data?.at(-1)?.length ?? 0) >= config.dishesPageSize;
+export function DishList({ initialData, searchParams }: DishListProps) {
+  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: ['dishes', searchParams],
+    queryFn: ({ pageParam }) => getDishes({ ...searchParams, page: pageParam }),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.length < config.dish.pageSize ? undefined : allPages.length + 1,
+    initialData: { pages: [initialData], pageParams: [1] },
+  });
 
   return (
-    <div className="space-y-10">
-      <ul className="grid grid-cols-4 gap-10">
-        {dishes?.map(data => (
-          <li key={data.id}>
-            <DishCard data={data} />
+    <div className="">
+      <ul className="grid grid-cols-4 gap-8">
+        {data?.pages.flat().map(item => (
+          <li key={item.id}>
+            <DishCard data={item} />
           </li>
         ))}
       </ul>
       {hasNextPage && (
         <Button
-          className="mx-auto block"
-          variant="outline"
-          disabled={isValidating}
-          onClick={handleLoadMore}
+          className="ml-auto mt-10"
+          variant="flat"
+          icon={MdArrowDownward}
+          onClick={() => fetchNextPage()}
         >
-          {isValidating ? 'Зачекайте...' : 'Більше страв'}
+          More Dishes
         </Button>
       )}
     </div>

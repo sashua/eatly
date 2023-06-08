@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import celentano from './celentano.json';
 import kfc from './kfc.json';
-import lvivcroissants from './lvivcroissants.json';
+import lvivcroissants from './lviv-croissants.json';
 
 const prisma = new PrismaClient();
 

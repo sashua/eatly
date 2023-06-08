@@ -1,24 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
+import { config } from '~/lib/config';
 import { prisma } from '~/lib/prisma';
-import { SearchDishes } from '~/lib/schemas';
+import { SearchDishesSchema } from '~/lib/schemas';
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const { rest, search, sort, order, page, limit } = SearchDishes.parse(
-      Object.fromEntries(searchParams.entries())
-    );
+    const {
+      rest,
+      ids,
+      search,
+      sort = 'name',
+      order = 'asc',
+      page = 1,
+      limit = config.dish.pageSize,
+    } = SearchDishesSchema.parse(Object.fromEntries(searchParams.entries()));
 
     const data = await prisma.dish.findMany({
-      skip: (page - 1) * limit,
-      take: limit,
       where: {
         restaurantId: rest,
+        id: { in: ids },
         name: search ? { contains: search, mode: 'insensitive' } : undefined,
       },
-      orderBy: { [sort]: sort === 'orders' ? { _count: order } : order },
+      orderBy:
+        sort === 'name'
+          ? { name: order }
+          : sort === 'popularity'
+          ? [{ orders: { _count: order } }, { name: 'asc' }]
+          : [{ [sort]: order }, { name: 'asc' }],
+      skip: (page - 1) * limit,
+      take: limit,
     });
+
     return NextResponse.json(data);
   } catch (error) {
     if (error instanceof ZodError) {
@@ -28,12 +42,6 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       );
     }
-    if (error instanceof Error) {
-      console.log('❗️', error.message);
-      return NextResponse.json(
-        { message: 'Internal server error' },
-        { status: 500 }
-      );
-    }
+    throw error;
   }
 }

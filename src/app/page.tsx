@@ -1,52 +1,48 @@
-import { Dish, Restaurant } from '@prisma/client';
 import {
   DishList,
   Hero,
-  PreloadStore,
-  RestCard,
+  RestaurantCard,
   Statistics,
   Subscription,
 } from '~/components';
-
-async function getRestaurants(): Promise<Restaurant[]> {
-  const res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/restaurants');
-  return res.json();
-}
-
-async function getDishes(): Promise<Dish[]> {
-  const res = await fetch(process.env.NEXT_PUBLIC_API_URL + '/dishes');
-  return res.json();
-}
+import { getDishes, getRestaurants } from '~/lib/api';
 
 export default async function Home() {
-  const restaurants = await getRestaurants();
-  const dishes = await getDishes();
+  const [restaurants, dishes] = await Promise.all([
+    getRestaurants(),
+    getDishes({ sort: 'popularity', order: 'desc' }),
+  ]);
 
   return (
     <>
-      <PreloadStore values={{ restaurants, dishes }} />
       <Hero />
       <Statistics />
-      <Subscription />
-      {/* <section className="border-b pb-20">
-        <h2 className="mb-10 text-2xl font-semibold">
-          Наші <span className="text-violet-700">Ресторани</span>
-        </h2>
-        <ul className="grid grid-cols-3 gap-10">
-          {restaurants.map(data => (
-            <li key={data.id}>
-              <RestCard data={data} />
-            </li>
-          ))}
-        </ul>
+
+      <section className="border-b py-28">
+        <div className="container">
+          <h2 className="mb-20 text-center text-5xl font-semibold">
+            Наші <span className="text-brand">Ресторани</span>
+          </h2>
+          <ul className="grid grid-cols-3 gap-8">
+            {restaurants.map(data => (
+              <li key={data.id}>
+                <RestaurantCard data={data} />
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
-      <section className="border-b py-20">
-        <h2 className="mb-10 text-2xl font-semibold">
-          Наші <span className="text-violet-700">Страви</span>
-        </h2>
-        <DishList />
-      </section> */}
+      <section className="border-b py-28">
+        <div className="container">
+          <h2 className="mb-20 text-center text-5xl font-semibold">
+            Найпопулярніші <span className="text-brand">Страви</span>
+          </h2>
+          <DishList initialData={dishes} />
+        </div>
+      </section>
+
+      <Subscription />
     </>
   );
 }

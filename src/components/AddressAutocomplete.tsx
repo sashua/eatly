@@ -1,7 +1,6 @@
 'use client';
 
 import { Combobox } from '@headlessui/react';
-import clsx from 'clsx';
 import { ChangeEvent } from 'react';
 import usePlacesAutocomplete, {
   LatLng,
@@ -51,36 +50,38 @@ export function AddressAutocomplete({
   return (
     <Combobox
       as="div"
-      className={clsx('relative', className)}
+      className={'relative ' + className}
       name="name"
       defaultValue={defaultValue}
       disabled={!ready}
       onChange={handleSelect}
     >
       <Combobox.Input
-        className={clsx(
-          'peer w-full rounded-xl border bg-white px-6 py-3 outline-none transition-colors disabled:bg-neutral-200',
+        className={
+          'peer w-full rounded-xl border bg-white px-6 py-3 outline-none transition-colors disabled:bg-neutral-200 ' +
           isError
             ? 'border-red-400 focus:border-red-400'
             : 'focus:border-violet-700'
-        )}
+        }
         placeholder=" "
         required={required}
         onChange={handleChange}
       />
       <Combobox.Label
-        className={clsx(
-          'absolute left-5 top-0 -translate-y-1/2 bg-white px-1 text-xs leading-none transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:bg-white peer-focus:text-xs',
-          isError ? 'text-red-400' : 'text-gray-400 peer-focus:text-violet-700'
-        )}
+        className={
+          'absolute left-5 top-0 -translate-y-1/2 bg-white px-1 text-xs leading-none transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:bg-white peer-focus:text-xs ' +
+          isError
+            ? 'text-red-400'
+            : 'text-gray-400 peer-focus:text-violet-700'
+        }
       >
         {placeholder}
       </Combobox.Label>
-      <Combobox.Options className="absolute inset-x-0 -bottom-2 translate-y-full overflow-hidden rounded-xl bg-violet-50 shadow-md">
+      <Combobox.Options className="bg-violet-50 absolute inset-x-0 -bottom-2 translate-y-full overflow-hidden rounded-xl shadow-md">
         {status === 'OK' &&
           data.map(({ place_id, description }) => (
             <Combobox.Option
-              className="line-clamp-1 cursor-pointer px-6 py-1.5 text-gray-500 transition-colors ui-active:bg-violet-200 ui-active:text-violet-800"
+              className="text-gray-500 ui-active:bg-violet-200 ui-active:text-violet-800 line-clamp-1 cursor-pointer px-6 py-1.5 transition-colors"
               key={place_id}
               value={description}
             >

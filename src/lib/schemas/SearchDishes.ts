@@ -1,11 +1,17 @@
 import { z } from 'zod';
-import { config } from '../config';
 
-export const SearchDishes = z.object({
+export const SearchDishesSchema = z.object({
   rest: z.string().cuid().optional(),
+  ids: z
+    .string()
+    .optional()
+    .transform(v => v?.split(','))
+    .pipe(z.string().cuid().array().optional()),
   search: z.string().trim().toLowerCase().optional(),
-  sort: z.enum(['orders', 'price']).default('orders'),
-  order: z.enum(['asc', 'desc']).default('desc'),
-  page: z.coerce.number().positive().default(1),
-  limit: z.coerce.number().positive().default(config.dish.pageSize),
+  sort: z.enum(['name', 'price', 'popularity']).optional(),
+  order: z.enum(['asc', 'desc']).optional(),
+  page: z.coerce.number().positive().optional(),
+  limit: z.coerce.number().positive().optional(),
 });
+
+export type SearchDishes = z.infer<typeof SearchDishesSchema>;

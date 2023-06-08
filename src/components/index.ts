@@ -15,6 +15,6 @@ export * from './OrderCard';
 export * from './OrderForm';
 export * from './OrderList';
 export * from './PreloadStore';
-export * from './RestCard';
+export * from './RestaurantCard';
 export * from './Statistics';
 export * from './Subscription';

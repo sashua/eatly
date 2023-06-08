@@ -1,7 +1,9 @@
 {
   "restaurant": {
     "name": "Lviv Croissants",
-    "logo": "ZVXJLrOLeCL0nOtSUty8a.svg"
+    "description": "Українська мережа пекарень з великим асортиментом свіжовипечених круасанів з різноманітними начинками",
+    "logo": "lviv-croissants-logo.svg",
+    "image": "lviv-croissants-image.jpg"
   },
   "dishes": [
     {
