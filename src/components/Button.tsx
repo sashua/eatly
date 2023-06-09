@@ -4,22 +4,18 @@ import { tv, type VariantProps } from 'tailwind-variants';
 
 const button = tv({
   slots: {
-    base: 'flex items-center gap-2 rounded-2xl font-medium transition-colors',
-    icon: 'h-[1.25em] w-[1.25em]',
+    base: 'flex items-center gap-1.5 rounded-2xl font-medium transition-colors',
   },
   variants: {
     variant: {
       solid: {
         base: 'bg-brand text-white hover:bg-brand-700 active:bg-brand disabled:bg-neutral-300',
-        icon: '',
       },
       outline: {
         base: 'bg-white text-brand hover:bg-brand-100 active:bg-white disabled:bg-white disabled:text-neutral-300',
-        icon: '',
       },
       flat: {
         base: 'p-2 text-neutral hover:text-brand-700 active:text-brand disabled:text-neutral-300',
-        icon: '',
       },
     },
   },
@@ -37,15 +33,12 @@ type ButtonVariants = VariantProps<typeof button>;
 
 interface ButtonProps
   extends ButtonVariants,
-    ComponentPropsWithoutRef<'button'> {
-  icon?: IconType;
-}
+    ComponentPropsWithoutRef<'button'> {}
 
 export function Button({
   className,
   variant,
   type = 'button',
-  icon: Icon,
   children,
   ...props
 }: ButtonProps) {
@@ -54,7 +47,6 @@ export function Button({
   return (
     <button className={classes.base({ className })} type={type} {...props}>
       {children}
-      {Icon && <Icon className={classes.icon()} />}
     </button>
   );
 }

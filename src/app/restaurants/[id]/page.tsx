@@ -13,7 +13,7 @@ export default async function Restaurant({ params }: RestaurantProps) {
   ]);
   return (
     <div className="container py-28">
-      <div className="mb-28 overflow-hidden rounded-3xl shadow-2xl">
+      <div className="mb-20 overflow-hidden rounded-3xl shadow-2xl">
         <div className="relative aspect-[4]">
           <Image
             className="object-cover"
@@ -34,7 +34,7 @@ export default async function Restaurant({ params }: RestaurantProps) {
             </div>
             <h3 className="mb-2 text-5xl font-semibold">{restaurant.name}</h3>
           </div>
-          <p className="mb-4 basis-1/3 text-xl text-neutral-500">
+          <p className="mb-4 basis-1/3 text-neutral-500">
             {restaurant.description}
           </p>
         </div>
@@ -42,7 +42,11 @@ export default async function Restaurant({ params }: RestaurantProps) {
 
       <DishList
         initialData={dishes}
-        searchParams={{ rest: params.id, sort: 'popularity', order: 'desc' }}
+        initialSearchParams={{
+          rest: params.id,
+          sort: 'popularity',
+          order: 'desc',
+        }}
       />
     </div>
   );

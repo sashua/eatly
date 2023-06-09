@@ -35,8 +35,8 @@ export default async function Home() {
 
       <section className="border-b py-28">
         <div className="container">
-          <h2 className="mb-20 text-center text-5xl font-semibold">
-            Найпопулярніші <span className="text-brand">Страви</span>
+          <h2 className="mb-10 text-center text-5xl font-semibold">
+            Наші <span className="text-brand">Страви</span>
           </h2>
           <DishList initialData={dishes} />
         </div>
