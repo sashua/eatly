@@ -1,31 +1,19 @@
 import { ComponentPropsWithoutRef } from 'react';
-import { IconType } from 'react-icons';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 const button = tv({
-  slots: {
-    base: 'flex items-center gap-1.5 rounded-2xl font-medium transition-colors',
-  },
+  base: 'flex items-center justify-center gap-1.5 rounded-2xl font-medium transition-colors',
   variants: {
     variant: {
-      solid: {
-        base: 'bg-brand text-white hover:bg-brand-700 active:bg-brand disabled:bg-neutral-300',
-      },
-      outline: {
-        base: 'bg-white text-brand hover:bg-brand-100 active:bg-white disabled:bg-white disabled:text-neutral-300',
-      },
-      flat: {
-        base: 'p-2 text-neutral hover:text-brand-700 active:text-brand disabled:text-neutral-300',
-      },
+      solid:
+        'border-2 border-brand bg-brand px-6 py-4 text-white shadow-md hover:border-brand-700 hover:bg-brand-700 active:border-brand active:bg-brand disabled:border-neutral-300 disabled:bg-neutral-300 disabled:shadow-none',
+
+      outline:
+        'border-2 border-brand px-6 py-4 text-brand shadow-md hover:border-brand-700 hover:bg-brand-100 active:border-brand active:bg-transparent disabled:border-neutral-300 disabled:bg-transparent disabled:text-neutral-300 disabled:shadow-none',
+
+      flat: 'p-2 text-neutral hover:text-brand-700 active:text-brand disabled:text-neutral-300',
     },
   },
-  compoundVariants: [
-    {
-      variant: ['solid', 'outline'],
-      class:
-        'border-2 border-brand px-6 py-4 shadow-md hover:border-brand-700 active:border-brand disabled:border-neutral-300 disabled:shadow-none',
-    },
-  ],
   defaultVariants: { variant: 'solid' },
 });
 
@@ -42,10 +30,8 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const classes = button({ variant });
-
   return (
-    <button className={classes.base({ className })} type={type} {...props}>
+    <button className={button({ variant, className })} type={type} {...props}>
       {children}
     </button>
   );

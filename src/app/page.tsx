@@ -1,3 +1,4 @@
+import { Dish } from '@prisma/client';
 import {
   DishList,
   Hero,
@@ -38,7 +39,13 @@ export default async function Home() {
           <h2 className="mb-10 text-center text-5xl font-semibold">
             Наші <span className="text-brand">Страви</span>
           </h2>
-          <DishList initialData={dishes} />
+          <DishList
+            initialData={dishes}
+            initialSearchParams={{
+              sort: 'popularity',
+              order: 'desc',
+            }}
+          />
         </div>
       </section>
 

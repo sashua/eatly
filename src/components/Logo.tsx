@@ -1,25 +1,25 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { tv, type VariantProps } from 'tailwind-variants';
+import { Image } from './Image';
 
 const logo = tv({
   slots: {
     base: 'flex items-center gap-3 font-semibold text-brand',
-    imageWrap: 'relative aspect-square shrink-0',
+    image: 'aspect-square shrink-0',
   },
   variants: {
     size: {
       sm: {
         base: 'text-xl',
-        imageWrap: 'w-10',
+        image: 'w-10',
       },
       md: {
         base: 'text-2xl',
-        imageWrap: 'w-12',
+        image: 'w-12',
       },
       lg: {
         base: 'text-3xl',
-        imageWrap: 'w-14',
+        image: 'w-14',
       },
     },
   },
@@ -37,9 +37,12 @@ export function Logo({ className, size }: LogoProps) {
 
   return (
     <Link className={classes.base({ className })} href="/">
-      <div className={classes.imageWrap()}>
-        <Image src="/logo.svg" alt="Company logo" fill />
-      </div>
+      <Image
+        className={classes.image()}
+        src="/logo.svg"
+        alt="Company logo"
+        fit="contain"
+      />
       <span>eatly</span>
     </Link>
   );

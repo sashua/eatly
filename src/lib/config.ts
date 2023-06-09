@@ -1,7 +1,7 @@
 export const config = {
-  dish: {
+  dishes: {
     pageSize: 4,
-    maxQty: 9,
+    maxOrderedQuantity: 9,
   },
   deliveryCostPerKm: 5,
   deliveryMaxRadius: 5000,

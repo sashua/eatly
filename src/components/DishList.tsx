@@ -1,38 +1,27 @@
 'use client';
 
 import { Dish } from '@prisma/client';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { MdArrowDownward, MdPersonAddDisabled } from 'react-icons/md';
+import { MdArrowDownward } from 'react-icons/md';
 import { Button, DishCard, SortBar } from '~/components';
-import { getDishes } from '~/lib/api';
-import { config } from '~/lib/config';
+import { useDishesQuery } from '~/lib/hooks';
 import { SearchDishes } from '~/lib/schemas';
 import { useOrderStore, useStore } from '~/lib/store';
 
 interface DishListProps {
-  initialSearchParams?: SearchDishes;
+  initialSearchParams: SearchDishes;
   initialData: Dish[];
 }
 
-export function DishList({
-  initialData,
-  initialSearchParams = {},
-}: DishListProps) {
+export function DishList({ initialData, initialSearchParams }: DishListProps) {
   const [searchParams, setSearchParams] = useState(initialSearchParams);
+  const { data, hasNextPage, fetchNextPage } = useDishesQuery(
+    initialData,
+    searchParams
+  );
 
-  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery({
-    queryKey: ['dishes', searchParams],
-    queryFn: ({ pageParam }) => getDishes({ ...searchParams, page: pageParam }),
-    getNextPageParam: (lastPage, allPages) =>
-      lastPage.length < config.dish.pageSize ? undefined : allPages.length + 1,
-    initialData: { pages: [initialData], pageParams: [1] },
-  });
-
-  const orderRestaurant = useStore(useOrderStore, s => s.restaurantId);
-  const orderDishes = useStore(useOrderStore, s => s.dishes);
-  const ordered = orderDishes?.map(item => item.id);
-  const addDish = useOrderStore(s => s.addDish);
+  const orderedDishes = useStore(useOrderStore, s => s.dishes);
+  const addOneDish = useOrderStore(s => s.addOneDish);
 
   const handleSortChange = (
     sortParams: Pick<SearchDishes, 'sort' | 'order'>
@@ -40,6 +29,8 @@ export function DishList({
     setSearchParams(prev => ({ ...prev, ...sortParams }));
   };
 
+  const orderRestaurantId = orderedDishes?.[0]?.restaurantId;
+  const orderedDishIds = orderedDishes?.map(item => item.id);
   return (
     <div className="">
       <SortBar
@@ -52,12 +43,12 @@ export function DishList({
           <li key={item.id}>
             <DishCard
               data={item}
-              isOrdered={ordered?.includes(item.id)}
+              isOrdered={orderedDishIds?.includes(item.id)}
               isDisabled={
-                Boolean(orderRestaurant) &&
-                orderRestaurant !== item.restaurantId
+                Boolean(orderRestaurantId) &&
+                orderRestaurantId !== item.restaurantId
               }
-              onAdd={() => addDish?.(item)}
+              onAdd={() => addOneDish?.(item)}
             />
           </li>
         ))}

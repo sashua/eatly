@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { Button } from './Button';
+import { Image } from './Image';
 
 export function Hero() {
   return (
@@ -20,9 +20,11 @@ export function Hero() {
         </div>
         <div className="basis-1/2 bg-right-top bg-no-repeat px-20 [background-image:url(/arrow-1.svg)] [background-size:25%]">
           <div className="overflow-hidden rounded-full bg-brand">
-            <div className="relative aspect-square">
-              <Image src="/food-1.png" alt="Some food" fill />
-            </div>
+            <Image
+              className="aspect-square"
+              src="/food-1.png"
+              alt="Some food"
+            />
           </div>
         </div>
       </div>

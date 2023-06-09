@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { Button } from './Button';
+import { Image } from './Image';
 
 interface SubscriptionProps {}
 
@@ -20,9 +20,11 @@ export function Subscription({}: SubscriptionProps) {
             </label>
           </form>
           <div className="relative w-1/4">
-            <div className="absolute inset-x-0 top-0 aspect-square">
-              <Image src="/food-2.png" alt="Some food" fill />
-            </div>
+            <Image
+              className="absolute inset-x-0 top-0 aspect-square"
+              src="/food-2.png"
+              alt="Some food"
+            />
           </div>
         </div>
       </div>

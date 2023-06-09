@@ -1,9 +1,9 @@
 import { Dish } from '@prisma/client';
 import clsx from 'clsx';
-import Image from 'next/image';
 import { MdAdd, MdBlock, MdDone } from 'react-icons/md';
 import { formatMoney } from '~/lib/utils';
 import { IconButton } from './IconButton';
+import { Image } from './Image';
 
 interface DishCardProps {
   data: Dish;
@@ -27,14 +27,7 @@ export function DishCard({
         isDisabled && 'opacity-50'
       )}
     >
-      <div className="relative aspect-[3/2]">
-        <Image
-          className="object-cover"
-          src={`/images/${image}`}
-          alt={name}
-          fill
-        />
-      </div>
+      <Image className="aspect-[3/2]" src={`/images/${image}`} alt={name} />
       <div className="flex grow flex-col justify-between gap-2 px-6 py-6 pt-4">
         <h3 className="text-xl font-semibold uppercase">{name}</h3>
         <p className="text-xs text-neutral-500">{description}</p>

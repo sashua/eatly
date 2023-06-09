@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       sort = 'name',
       order = 'asc',
       page = 1,
-      limit = config.dish.pageSize,
+      limit = config.dishes.pageSize,
     } = SearchDishesSchema.parse(Object.fromEntries(searchParams.entries()));
 
     const data = await prisma.dish.findMany({
