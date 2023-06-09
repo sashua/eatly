@@ -4,7 +4,7 @@ import { tv, type VariantProps } from 'tailwind-variants';
 
 const iconButton = tv({
   slots: {
-    base: 'border-brand text-brand transition-colors hover:border-brand-700 hover:bg-brand-700 hover:text-white active:border-brand active:bg-brand disabled:border-neutral disabled:text-neutral disabled:shadow-none',
+    base: 'border-brand text-brand transition-colors hover:border-brand-700 hover:bg-brand-700 hover:text-white active:border-brand active:bg-brand disabled:border-neutral-300 disabled:text-neutral-300 disabled:shadow-none disabled:hover:bg-transparent',
     icon: 'h-[1.5em] w-[1.5em]',
   },
   variants: {

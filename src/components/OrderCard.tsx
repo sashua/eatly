@@ -1,22 +1,17 @@
 import { Dish } from '@prisma/client';
 import Image from 'next/image';
 import { MdAdd, MdDeleteForever, MdRemove } from 'react-icons/md';
-import { config } from '~/lib/config';
-import { OrderDish, useOrderStore } from '~/lib/store';
 import { formatMoney } from '~/lib/utils';
 import { IconButton } from './IconButton';
 
 interface OrderCardProps {
-  data: OrderDish;
+  dish: Dish;
+  quantity: number;
 }
 
-export function OrderCard({ data }: OrderCardProps) {
-  const [setQty, deleteDish] = useOrderStore(store => [
-    store.setDishQty,
-    store.deleteDish,
-  ]);
-  const { id, name, price, qty, image } = data;
-  const sum = price * qty;
+export function OrderCard({ dish, quantity }: OrderCardProps) {
+  const { id, name, price, image } = dish;
+  const sum = price * quantity;
 
   return (
     <div className="flex w-full items-center overflow-hidden rounded-xl bg-white shadow-md">
@@ -39,19 +34,19 @@ export function OrderCard({ data }: OrderCardProps) {
           <div className="relative ml-auto flex w-28 items-center justify-between">
             <IconButton
               variant="outline"
-              icon={qty <= 1 ? MdDeleteForever : MdRemove}
-              onClick={() => (qty <= 1 ? deleteDish(id) : setQty(id, qty - 1))}
+              icon={quantity <= 1 ? MdDeleteForever : MdRemove}
+              onClick={() => {}}
             />
             <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none text-center text-xl">
-              {String(qty).padStart(2, '0')}
+              {quantity}
             </span>
             <IconButton
               icon={MdAdd}
-              disabled={qty >= config.dishMaxQty}
-              onClick={() => setQty(id, qty + 1)}
+              disabled={quantity >= 9}
+              onClick={() => {}}
             />
           </div>
-          <p className="text-center text-gray-600">{formatMoney(sum)}</p>
+          <p className="text-gray-600 text-center">{formatMoney(sum)}</p>
         </div>
       </div>
     </div>

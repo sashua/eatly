@@ -1,4 +1,5 @@
 import { Dish } from '@prisma/client';
+import clsx from 'clsx';
 import Image from 'next/image';
 import { MdAdd, MdBlock, MdDone } from 'react-icons/md';
 import { formatMoney } from '~/lib/utils';
@@ -6,18 +7,25 @@ import { IconButton } from './IconButton';
 
 interface DishCardProps {
   data: Dish;
+  isOrdered?: boolean;
+  isDisabled?: boolean;
+  onAdd: () => void;
 }
 
-export function DishCard({ data }: DishCardProps) {
+export function DishCard({
+  data,
+  isOrdered,
+  isDisabled,
+  onAdd,
+}: DishCardProps) {
   const { name, description, price, image } = data;
 
-  const isDisabled = false;
-  const isOrdered = false;
   return (
     <div
-      className={
-        'group flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-xl transition-colors'
-      }
+      className={clsx(
+        'group flex h-full flex-col overflow-hidden rounded-3xl bg-white shadow-xl transition-colors',
+        isDisabled && 'opacity-50'
+      )}
     >
       <div className="relative aspect-[3/2]">
         <Image
@@ -36,7 +44,7 @@ export function DishCard({ data }: DishCardProps) {
             size="lg"
             icon={isDisabled ? MdBlock : isOrdered ? MdDone : MdAdd}
             disabled={isDisabled || isOrdered}
-            onClick={() => {}}
+            onClick={onAdd}
           />
         </div>
       </div>

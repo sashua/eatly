@@ -3,11 +3,12 @@
 import { Dish } from '@prisma/client';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { MdArrowDownward } from 'react-icons/md';
+import { MdArrowDownward, MdPersonAddDisabled } from 'react-icons/md';
 import { Button, DishCard, SortBar } from '~/components';
 import { getDishes } from '~/lib/api';
 import { config } from '~/lib/config';
 import { SearchDishes } from '~/lib/schemas';
+import { useOrderStore, useStore } from '~/lib/store';
 
 interface DishListProps {
   initialSearchParams?: SearchDishes;
@@ -28,6 +29,11 @@ export function DishList({
     initialData: { pages: [initialData], pageParams: [1] },
   });
 
+  const orderRestaurant = useStore(useOrderStore, s => s.restaurantId);
+  const orderDishes = useStore(useOrderStore, s => s.dishes);
+  const ordered = orderDishes?.map(item => item.id);
+  const addDish = useOrderStore(s => s.addDish);
+
   const handleSortChange = (
     sortParams: Pick<SearchDishes, 'sort' | 'order'>
   ) => {
@@ -44,7 +50,15 @@ export function DishList({
       <ul className="grid grid-cols-4 gap-8">
         {data?.pages.flat().map(item => (
           <li key={item.id}>
-            <DishCard data={item} />
+            <DishCard
+              data={item}
+              isOrdered={ordered?.includes(item.id)}
+              isDisabled={
+                Boolean(orderRestaurant) &&
+                orderRestaurant !== item.restaurantId
+              }
+              onAdd={() => addDish?.(item)}
+            />
           </li>
         ))}
       </ul>
