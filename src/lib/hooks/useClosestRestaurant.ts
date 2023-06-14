@@ -1,4 +1,3 @@
-import { useGoogleMap } from '@react-google-maps/api';
 import { useEffect } from 'react';
 import { config } from '../config';
 import { useOrderStore } from '../store';

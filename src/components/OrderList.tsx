@@ -1,25 +1,69 @@
 'use client';
 
+import { useMemo } from 'react';
+import { tv, VariantProps } from 'tailwind-variants';
+import { useOrderDishesQuery } from '~/lib/hooks';
+import { useOrderStore } from '~/lib/store';
 import { formatMoney } from '~/lib/utils';
+import { OrderCard } from './OrderCard';
 
-export function OrderList() {
-  const subtotal = 0;
-  const delivery = 0;
-  const total = 0;
+const orderList = tv({
+  slots: {
+    list: '',
+    total: 'flex justify-between border-b border-dashed font-semibold',
+  },
+  variants: {
+    size: {
+      sm: {
+        list: 'mb-10 space-y-4',
+        total: 'pb-2 text-xl',
+      },
+      md: {
+        list: 'mb-12 space-y-6',
+        total: 'pb-3 text-2xl',
+      },
+    },
+  },
+  defaultVariants: { size: 'md' },
+});
 
+type OrderListVariants = VariantProps<typeof orderList>;
+
+interface OrderListProps extends OrderListVariants {
+  className?: string;
+}
+
+export function OrderList({ className, size }: OrderListProps) {
+  const { data: dishes } = useOrderDishesQuery();
+  const addOneDish = useOrderStore(s => s.addOneDish);
+  const delOneDish = useOrderStore(s => s.delOneDish);
+
+  const total = useMemo(
+    () =>
+      formatMoney(
+        dishes.reduce((acc, { price, quantity }) => acc + price * quantity, 0)
+      ),
+    [dishes]
+  );
+
+  const classes = orderList({ size });
   return (
-    <div className="divide-y-2 divide-dashed">
-      <p className="text-gray-400 flex justify-between py-3 text-xl">
-        <span>Підсумок</span>
-        <span>{formatMoney(subtotal)}</span>
-      </p>
-      <p className="text-gray-400 flex justify-between py-3 text-xl">
-        <span>Доставка</span>
-        <span>{formatMoney(delivery)}</span>
-      </p>
-      <p className="flex justify-between py-3 text-2xl font-semibold">
-        <span className="uppercase">Cума</span>
-        <span>{formatMoney(total)}</span>
+    <div className={className}>
+      <ul className={classes.list()}>
+        {dishes?.map(data => (
+          <li key={data.id}>
+            <OrderCard
+              data={data}
+              size={size}
+              onAdd={() => addOneDish(data)}
+              onDel={() => delOneDish(data)}
+            />
+          </li>
+        ))}
+      </ul>
+      <p className={classes.total()}>
+        <span>Сума</span>
+        <span>{total}</span>
       </p>
     </div>
   );

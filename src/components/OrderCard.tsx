@@ -3,8 +3,7 @@ import { MdAdd, MdDeleteForever, MdRemove } from 'react-icons/md';
 import { tv, type VariantProps } from 'tailwind-variants';
 import { config } from '~/lib/config';
 import { formatMoney } from '~/lib/utils';
-import { IconButton } from './IconButton';
-import { Image } from './Image';
+import { IconButton, Image } from './common';
 
 const orderCard = tv({
   slots: {

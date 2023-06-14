@@ -2,8 +2,7 @@ import { Dish } from '@prisma/client';
 import clsx from 'clsx';
 import { MdAdd, MdBlock, MdDone } from 'react-icons/md';
 import { formatMoney } from '~/lib/utils';
-import { IconButton } from './IconButton';
-import { Image } from './Image';
+import { IconButton, Image } from './common';
 
 interface DishCardProps {
   data: Dish;

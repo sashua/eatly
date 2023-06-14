@@ -1,6 +1,6 @@
 import { Restaurant } from '@prisma/client';
 import Link from 'next/link';
-import { Image } from './Image';
+import { Image } from './common';
 
 interface RestaurantCardProps {
   data: Restaurant;

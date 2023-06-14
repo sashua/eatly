@@ -1,4 +1,5 @@
-import { DishList, Image } from '~/components';
+import { DishList } from '~/components';
+import { Image } from '~/components/common';
 import { getDishes, getRestaurant } from '~/lib/api';
 
 interface RestaurantProps {

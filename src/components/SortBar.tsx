@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { MdSort } from 'react-icons/md';
 import { tv } from 'tailwind-variants';
-import { Button } from '~/components';
 import { SearchDishes } from '~/lib/schemas';
+import { Button } from './common';
 
 type Sort = Required<SearchDishes>['sort'];
 type Order = Required<SearchDishes>['order'];

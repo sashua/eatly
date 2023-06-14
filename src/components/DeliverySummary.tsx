@@ -1,5 +1,5 @@
 import { Restaurant } from '@prisma/client';
-import { Image } from './Image';
+import { Image } from './common';
 
 interface DeliverySummaryProps {
   restaurant?: Restaurant;

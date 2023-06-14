@@ -1,3 +1,9 @@
+import { OrderForm } from '~/components';
+
 export default function Order() {
-  // return <OrderForm />;
+  return (
+    <div className="container py-28">
+      <OrderForm />
+    </div>
+  );
 }

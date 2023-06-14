@@ -1,5 +1,4 @@
-import { Button } from './Button';
-import { Image } from './Image';
+import { Button, Image } from './common';
 
 interface SubscriptionProps {}
 

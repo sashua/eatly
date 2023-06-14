@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { tv, type VariantProps } from 'tailwind-variants';
-import { Image } from './Image';
+import { Image } from './common';
 
 const logo = tv({
   slots: {

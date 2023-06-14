@@ -3,7 +3,8 @@
 import { Dish } from '@prisma/client';
 import { useState } from 'react';
 import { MdArrowDownward } from 'react-icons/md';
-import { Button, DishCard, SortBar } from '~/components';
+import { DishCard, SortBar } from '~/components';
+import { Button } from './common';
 import { useDishesQuery } from '~/lib/hooks';
 import { SearchDishes } from '~/lib/schemas';
 import { useOrderStore, useStore } from '~/lib/store';
