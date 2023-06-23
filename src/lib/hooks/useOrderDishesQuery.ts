@@ -1,24 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { getDishes } from '../api';
 import { useOrderStore, useStore } from '../store';
 import { mergeArrays } from '../utils';
 
-export const useOrderDishesQuery = () => {
-  const orderDishes = useStore(useOrderStore, s => s.dishes);
-  const dishIds = orderDishes?.map(item => item.id);
+export function useOrderDishesQuery () {
+  const dishes = useStore(useOrderStore, s => s.dishes);
+  const dishIds = dishes?.map(item => item.id);
 
-  const { data = [] } = useQuery({
+  const { data } = useQuery({
     queryKey: ['dishes', 'list', { ids: dishIds }],
     queryFn: () => getDishes({ ids: dishIds }),
-    select: data =>
-      orderDishes && data ? mergeArrays(orderDishes, data, 'id') : orderDishes,
     keepPreviousData: true,
-    enabled: Boolean(orderDishes?.length),
+    enabled: Boolean(dishes?.length),
   });
 
-  const mergedData = orderDishes?.length
-    ? mergeArrays(orderDishes, data, 'id')
-    : [];
+  const orderDishes = useMemo(
+    () => (dishes?.length && data ? mergeArrays(dishes, data, 'id') : dishes),
+    [data, dishes]
+  );
 
-  return { data: mergedData };
+  return orderDishes;
 };

@@ -36,13 +36,12 @@ model Dish {
 model Order {
   id String @id @default(cuid())
 
-  customerName    String
-  customerEmail   String
-  deliveryAddress String
+  name    String
+  email   String
+  address String
 
   restaurantId      String
   restaurantAddress String
-  deliveryCost      Int
   totalSum          Int
 
   createdAt DateTime @default(now())
@@ -56,8 +55,8 @@ model OrderDish {
   orderId String
   dishId  String
 
-  price Int
-  qty   Int
+  price    Int
+  quantity Int
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
   dish  Dish  @relation(fields: [dishId], references: [id])

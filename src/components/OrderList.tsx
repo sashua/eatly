@@ -34,14 +34,17 @@ interface OrderListProps extends OrderListVariants {
 }
 
 export function OrderList({ className, size }: OrderListProps) {
-  const { data: dishes } = useOrderDishesQuery();
+  const dishes = useOrderDishesQuery();
   const addOneDish = useOrderStore(s => s.addOneDish);
   const delOneDish = useOrderStore(s => s.delOneDish);
 
   const total = useMemo(
     () =>
       formatMoney(
-        dishes.reduce((acc, { price, quantity }) => acc + price * quantity, 0)
+        dishes?.reduce(
+          (acc, { price, quantity }) => acc + price * quantity,
+          0
+        ) ?? 0
       ),
     [dishes]
   );

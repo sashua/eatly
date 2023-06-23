@@ -1,31 +1,22 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDebounce } from 'react-use';
-import { googleMaps } from '../googleMaps';
+import { useMapStore } from '../store';
 
 export function useAutocompleteService() {
-  const serviceRef = useRef<google.maps.places.AutocompleteService>();
   const [inputValue, setInputValue] = useState('');
   const [predictions, setPredictions] = useState<
     google.maps.places.AutocompletePrediction[]
   >([]);
 
-  useEffect(() => {
-    if (!serviceRef.current) {
-      googleMaps
-        .importLibrary('places')
-        .then(
-          places => (serviceRef.current = new places.AutocompleteService())
-        );
-    }
-  }, []);
+  const autocompleteService = useMapStore(s => s.autocompleteService);
 
   useDebounce(
     async () => {
       const input = inputValue.trim();
-      if (input.length < 3 || !serviceRef.current) {
+      if (input.length < 3 || !autocompleteService) {
         return;
       }
-      const res = await serviceRef.current.getPlacePredictions({
+      const res = await autocompleteService.getPlacePredictions({
         input: input,
         componentRestrictions: { country: 'ua' },
         language: 'uk',

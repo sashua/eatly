@@ -42,7 +42,6 @@ export function OrderForm() {
     handleSubmit,
     register,
     reset,
-    resetField,
     watch,
     formState: { errors },
   } = useForm<FormData>({
@@ -53,8 +52,8 @@ export function OrderForm() {
   // set form default values from global store after rehydration from local storage
   useEffect(() => {
     if (hasHydrated) {
-      const { clientInfo } = useOrderStore.getState();
-      reset(clientInfo);
+      const { name, email, address } = useOrderStore.getState();
+      reset({ name, email, address });
     }
   }, [hasHydrated, reset]);
 

@@ -3,49 +3,46 @@ import merge from 'deepmerge';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-type OrderClientInfo = {
-  name: string;
-  email: string;
-  address: string;
-};
-
 type OrderDish = Dish & {
   quantity: number;
 };
 
 type OrderState = {
-  _hasHydrated: boolean;
-  clientInfo: OrderClientInfo;
-  deliveryInfo: {
-    fromLocation: string | null;
-    toAddress: string | null;
-    toLocation: string | null;
-    distance: number | null;
-  };
+  name: string;
+  email: string;
+  address: string;
+  location?: google.maps.LatLngLiteral | null;
+  restaurantAddress?: string | null;
+  restaurantLocation?: google.maps.LatLngLiteral | null;
+  deliveryTime?: google.maps.Duration | null;
+  deliveryDistance?: google.maps.Distance | null;
   dishes: OrderDish[];
+  _hasHydrated: boolean;
 };
 
 type OrderAction = {
-  _setHasHydrated: (status: boolean) => void;
-  setClientInfo: (info: Partial<OrderClientInfo>) => void;
+  setClientInfo: (
+    info: Partial<Pick<OrderState, 'name' | 'email' | 'address'>>
+  ) => void;
+  setLocationInfo: (
+    info: Partial<
+      Pick<OrderState, 'location' | 'restaurantAddress' | 'restaurantLocation'>
+    >
+  ) => void;
+  setDeliveryInfo: (
+    info: Partial<Pick<OrderState, 'deliveryTime' | 'deliveryDistance'>>
+  ) => void;
   addOneDish: (dish: Dish) => void;
   delOneDish: (dish: Dish) => void;
+  _setHasHydrated: (status: boolean) => void;
 };
 
 const initialState: OrderState = {
-  _hasHydrated: false,
-  clientInfo: {
-    name: '',
-    email: '',
-    address: '',
-  },
-  deliveryInfo: {
-    fromLocation: null,
-    toAddress: null,
-    toLocation: null,
-    distance: null,
-  },
+  name: '',
+  email: '',
+  address: '',
   dishes: [],
+  _hasHydrated: false,
 };
 
 export const useOrderStore = create<OrderState & OrderAction>()(
@@ -54,15 +51,9 @@ export const useOrderStore = create<OrderState & OrderAction>()(
       (set, get) => ({
         ...initialState,
 
-        _setHasHydrated: status =>
-          set({
-            _hasHydrated: status,
-          }),
-
-        setClientInfo: info =>
-          set({
-            clientInfo: { ...get().clientInfo, ...info },
-          }),
+        setClientInfo: info => set({ ...info }),
+        setLocationInfo: info => set({ ...info }),
+        setDeliveryInfo: info => set({ ...info }),
 
         addOneDish: dish => {
           const dishes = [...get().dishes];
@@ -86,6 +77,11 @@ export const useOrderStore = create<OrderState & OrderAction>()(
           }, [] as OrderDish[]);
           set({ dishes });
         },
+
+        _setHasHydrated: status =>
+          set({
+            _hasHydrated: status,
+          }),
       }),
       {
         name: 'order-storage',
