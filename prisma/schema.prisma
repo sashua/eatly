@@ -42,7 +42,6 @@ model Order {
 
   restaurantId      String
   restaurantAddress String
-  totalSum          Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

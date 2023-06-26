@@ -4,7 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
-import { useAutocompleteService, useRestaurantQuery } from '~/lib/hooks';
+import {
+  useAutocompleteService,
+  useOrderMutation,
+  useRestaurantQuery,
+} from '~/lib/hooks';
+import { CreateOrderSchema } from '~/lib/schemas';
 import { useOrderStore, useStore } from '~/lib/store';
 import { Map } from './Map';
 import { OrderList } from './OrderList';
@@ -29,9 +34,11 @@ export function OrderForm() {
   const dishes = useStore(useOrderStore, s => s.dishes);
   const hasHydrated = useStore(useOrderStore, s => s._hasHydrated);
   const setClientInfo = useOrderStore(s => s.setClientInfo);
+  const clearOrder = useOrderStore(s => s.clearOrder);
 
   // get current order restaurant
   const { data: restaurant } = useRestaurantQuery(dishes?.[0]?.restaurantId);
+  const { mutate } = useOrderMutation();
 
   // set up google autocomplete
   const { predictions, setInput } = useAutocompleteService();
@@ -69,8 +76,19 @@ export function OrderForm() {
   }, [setClientInfo, setInput, watch]);
 
   // event handlers
-  const handleFormSubmit = handleSubmit((data: FormData) => {
-    console.log('🚧 submit data:', data);
+  const handleFormSubmit = handleSubmit(async (data: FormData) => {
+    const { name, email, address, restaurantAddress } =
+      useOrderStore.getState();
+    const restaurantId = dishes?.[0]?.restaurantId;
+    const createOrder = CreateOrderSchema.parse({
+      name,
+      email,
+      address,
+      restaurantAddress,
+      restaurantId,
+      dishes,
+    });
+    mutate(createOrder, { onSuccess: clearOrder });
   });
 
   // calculate additional values

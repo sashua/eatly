@@ -8,7 +8,7 @@ export const CreateOrderSchema = z.object({
   restaurantAddress: z.string(),
   dishes: z.array(
     z.object({
-      dishId: z.string().cuid(),
+      id: z.string().cuid(),
       price: z.number(),
       quantity: z.number(),
     })

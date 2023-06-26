@@ -34,6 +34,7 @@ type OrderAction = {
   ) => void;
   addOneDish: (dish: Dish) => void;
   delOneDish: (dish: Dish) => void;
+  clearOrder: () => void;
   _setHasHydrated: (status: boolean) => void;
 };
 
@@ -41,6 +42,11 @@ const initialState: OrderState = {
   name: '',
   email: '',
   address: '',
+  location: null,
+  restaurantAddress: null,
+  restaurantLocation: null,
+  deliveryTime: null,
+  deliveryDistance: null,
   dishes: [],
   _hasHydrated: false,
 };
@@ -77,6 +83,8 @@ export const useOrderStore = create<OrderState & OrderAction>()(
           }, [] as OrderDish[]);
           set({ dishes });
         },
+
+        clearOrder: () => set(initialState),
 
         _setHasHydrated: status =>
           set({
