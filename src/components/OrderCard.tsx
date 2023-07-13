@@ -1,57 +1,85 @@
-import { Dish } from "@prisma/client";
-import Image from "next/image";
-import { MdAdd, MdDeleteForever, MdRemove } from "react-icons/md";
-import { config } from "~/lib/config";
-import { OrderDish, useOrderStore } from "~/lib/store";
-import { formatMoney } from "~/lib/utils";
-import { IconButton } from "./IconButton";
+import { Dish } from '@prisma/client';
+import { MdAdd, MdDeleteForever, MdRemove } from 'react-icons/md';
+import { tv, type VariantProps } from 'tailwind-variants';
+import { config } from '~/lib/config';
+import { formatMoney } from '~/lib/utils';
+import { IconButton, Image } from './common';
 
-interface OrderCardProps {
-  data: OrderDish;
+const orderCard = tv({
+  slots: {
+    base: 'flex w-full items-center',
+    image: 'aspect-[3/2] shrink-0',
+    bodyWrap: 'flex grow items-center justify-between gap-4 py-2',
+    name: 'mb-2 line-clamp-1 font-semibold uppercase',
+    price: 'text-lg font-semibold',
+    quantityWrap: 'relative mb-2 ml-auto flex items-center justify-between',
+    quantity:
+      'pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none text-center',
+    total: 'text-gray-600 text-center',
+  },
+  variants: {
+    size: {
+      sm: {
+        image: 'mr-4 basis-32 rounded-lg',
+        name: 'text-lg',
+        quantityWrap: 'w-20',
+        quantity: 'text-lg',
+      },
+      md: {
+        base: 'overflow-hidden rounded-xl bg-white shadow-md',
+        image: 'basis-40',
+        bodyWrap: 'px-6',
+        name: 'text-xl',
+        quantityWrap: 'w-24',
+        quantity: 'text-xl',
+      },
+    },
+  },
+  defaultVariants: { size: 'md' },
+});
+
+type OrderCardVariants = VariantProps<typeof orderCard>;
+
+interface OrderCardProps extends OrderCardVariants {
+  className?: string;
+  data: Dish & { quantity: number };
+  onAdd: () => void;
+  onDel: () => void;
 }
 
-export function OrderCard({ data }: OrderCardProps) {
-  const [setQty, deleteDish] = useOrderStore((store) => [
-    store.setDishQty,
-    store.deleteDish,
-  ]);
-  const { id, name, price, qty, image } = data;
-  const sum = price * qty;
+export function OrderCard({
+  className,
+  data: { name, price, quantity, image },
+  size,
+  onAdd,
+  onDel,
+}: OrderCardProps) {
+  const classes = orderCard({ size });
 
   return (
-    <div className="flex items-center w-full overflow-hidden bg-white shadow-md rounded-xl">
-      <div className="relative aspect-[3/2] basis-40 shrink-0">
-        <Image
-          className="object-cover"
-          src={`/images/${image}`}
-          alt={name}
-          fill
-        />
-      </div>
-      <div className="flex items-center justify-between gap-4 px-4 py-2 grow">
-        <div className="space-y-2">
-          <h3 className="text-xl font-semibold uppercase line-clamp-1">
-            {name}
-          </h3>
-          <p className="text-lg font-semibold">{formatMoney(price)}</p>
+    <div className={classes.base({ className })}>
+      <Image className={classes.image()} src={`/images/${image}`} alt={name} />
+      <div className={classes.bodyWrap()}>
+        <div>
+          <h3 className={classes.name()}>{name}</h3>
+          <p className={classes.price()}>{formatMoney(price)}</p>
         </div>
-        <div className="space-y-2">
-          <div className="relative flex items-center justify-between ml-auto w-28">
+        <div>
+          <div className={classes.quantityWrap()}>
             <IconButton
-              variant="outline"
-              icon={qty <= 1 ? MdDeleteForever : MdRemove}
-              onClick={() => (qty <= 1 ? deleteDish(id) : setQty(id, qty - 1))}
+              size={size}
+              icon={quantity <= 1 ? MdDeleteForever : MdRemove}
+              onClick={onDel}
             />
-            <span className="absolute text-xl text-center -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none top-1/2 left-1/2">
-              {String(qty).padStart(2, "0")}
-            </span>
+            <span className={classes.quantity()}>{quantity}</span>
             <IconButton
               icon={MdAdd}
-              disabled={qty >= config.dishMaxQty}
-              onClick={() => setQty(id, qty + 1)}
+              size={size}
+              disabled={quantity >= config.dishes.maxOrderedQuantity}
+              onClick={onAdd}
             />
           </div>
-          <p className="text-center text-gray-600">{formatMoney(sum)}</p>
+          <p className={classes.total()}>{formatMoney(price * quantity)}</p>
         </div>
       </div>
     </div>

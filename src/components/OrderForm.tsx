@@ -1,147 +1,145 @@
-"use client";
+'use client';
 
-import { useLoadScript } from "@react-google-maps/api";
-import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
-import useSWRMutation from "swr/mutation";
-import { config } from "~/lib/config";
-import { useClosestRestaurant } from "~/lib/hooks";
-import { useOrderStore } from "~/lib/store";
-import { getApiUrl, sendRequest } from "~/lib/utils";
-import { AddressAutocomplete } from "./AddressAutocomplete";
-import { Button } from "./Button";
-import { DeliverySummary } from "./DeliverySummary";
-import { Input } from "./Input";
-import { Map } from "./Map";
-import { OrderList } from "./OrderList";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import z from 'zod';
+import {
+  useAutocompleteService,
+  useOrderMutation,
+  useRestaurantQuery,
+} from '~/lib/hooks';
+import { CreateOrderSchema } from '~/lib/schemas';
+import { useOrderStore, useStore } from '~/lib/store';
+import { Map } from './Map';
+import { OrderList } from './OrderList';
+import { Button, Combobox, Input } from './common';
 
-const libraries = ["places"] as "places"[];
-const postUrl = getApiUrl("orders");
+const formSchema = z.object({
+  name: z.string().nonempty(),
+  email: z.string().email(),
+  address: z.string().nonempty(),
+});
+
+type FormData = z.infer<typeof formSchema>;
+
+const defaultValues: FormData = {
+  name: '',
+  email: '',
+  address: '',
+};
 
 export function OrderForm() {
-  // ---- load google maps ----
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
-    language: "uk",
-    libraries: libraries,
+  // get values from global store
+  const dishes = useStore(useOrderStore, s => s.dishes);
+  const hasHydrated = useStore(useOrderStore, s => s._hasHydrated);
+  const setClientInfo = useOrderStore(s => s.setClientInfo);
+  const clearOrder = useOrderStore(s => s.clearOrder);
+
+  // get current order restaurant
+  const { data: restaurant } = useRestaurantQuery(dishes?.[0]?.restaurantId);
+  const { mutate } = useOrderMutation();
+
+  // set up google autocomplete
+  const { predictions, setInput } = useAutocompleteService();
+
+  // set up react-hook-form
+  const {
+    control,
+    handleSubmit,
+    register,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>({
+    defaultValues,
+    resolver: zodResolver(formSchema),
   });
-  const [map, setMap] = useState<google.maps.Map>();
 
-  // ---- get data from hooks ----
-  const { restaurant, restaurantLocation, deliveryRoute } =
-    useClosestRestaurant(map);
-  const [
-    contacts,
-    clientLoaction,
-    dishes,
-    updateContacts,
-    setClientLocation,
-    clearOrder,
-  ] = useOrderStore((store) => [
-    store.contacts,
-    store.clientLocation,
-    Object.values(store.dishes),
-    store.updateContacts,
-    store.setClientLocation,
-    store.clearOrder,
-  ]);
-  const { trigger, isMutating } = useSWRMutation(postUrl, sendRequest);
-  const router = useRouter();
-
-  // ---- calculate order totals ----
-  const { duration, distance } = deliveryRoute?.routes[0].legs[0] ?? {};
-  const subtotal = dishes.reduce((acc, { price, qty }) => acc + price * qty, 0);
-  const delivery =
-    Math.round(distance?.value ?? (0 * config.deliveryCostPerKm) / 10) / 100;
-  const total = subtotal + delivery;
-
-  // ---- handle form events ----
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    updateContacts({ [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const data = {
-      ...contacts,
-      address: clientLoaction?.address,
-      delivery,
-      total,
-      dishes: dishes.map(({ id, price, qty }) => ({ dishId: id, price, qty })),
-    };
-
-    try {
-      await trigger(data);
-      clearOrder();
-      router.push("/");
-    } catch (e) {
-      console.log(e);
+  // set form default values from global store after rehydration from local storage
+  useEffect(() => {
+    if (hasHydrated) {
+      const { name, email, address } = useOrderStore.getState();
+      reset({ name, email, address });
     }
-  };
+  }, [hasHydrated, reset]);
+
+  // sync form inputs with global store and autocomplete service
+  useEffect(() => {
+    const subscription = watch((data, { name }) => {
+      setClientInfo(data);
+      if (name === 'address') {
+        setInput('');
+      }
+    });
+    return subscription.unsubscribe;
+  }, [setClientInfo, setInput, watch]);
+
+  // event handlers
+  const handleFormSubmit = handleSubmit(async (data: FormData) => {
+    const { name, email, address, restaurantAddress } =
+      useOrderStore.getState();
+    const restaurantId = dishes?.[0]?.restaurantId;
+    const createOrder = CreateOrderSchema.parse({
+      name,
+      email,
+      address,
+      restaurantAddress,
+      restaurantId,
+      dishes,
+    });
+    mutate(createOrder, { onSuccess: clearOrder });
+  });
+
+  // calculate additional values
+  const isOrderEmpty = (dishes?.length ?? 0) === 0;
+  const addressOptions = useMemo(
+    () => predictions?.map(({ description }) => description),
+    [predictions]
+  );
 
   return (
-    <form autoComplete="off" onSubmit={handleSubmit}>
-      <div className="relative">
-        <div className="overflow-hidden bg-gray-200 rounded-2xl aspect-video">
-          {isLoaded && <Map onLoad={setMap} />}
-        </div>
-        <div className="absolute bottom-0 w-full max-w-lg -translate-x-1/2 translate-y-1/2 bg-white shadow-xl rounded-3xl left-1/2">
-          <DeliverySummary
-            restaurant={restaurant}
-            restaurantAddress={restaurantLocation?.address}
-            summary={duration ? `${duration?.text}(${distance?.text})` : ""}
-          />
-          <div className="flex flex-col gap-4 px-6 pt-6 pb-10">
-            {isLoaded ? (
-              <AddressAutocomplete
-                className="z-30"
-                name="address"
-                placeholder="Адреса доставки"
-                defaultValue={clientLoaction?.address ?? ""}
-                required
-                onSelect={setClientLocation}
-              />
-            ) : (
-              <Input placeholder="Адреса доставки" disabled />
-            )}
+    <form autoComplete="off" onSubmit={handleFormSubmit}>
+      <div className="relative mb-60 aspect-video rounded-2xl bg-neutral-200">
+        <Map className="h-full w-full rounded-2xl" />
+
+        <div className="absolute bottom-0 left-1/2 w-full max-w-lg -translate-x-1/2 translate-y-1/2 rounded-2xl bg-white shadow-xl">
+          <div className="flex flex-col gap-4 px-6 pb-10 pt-6">
+            <Controller
+              name="address"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Combobox
+                  {...field}
+                  placeholder="Адреса доставки"
+                  options={addressOptions}
+                  error={fieldState.error?.message}
+                  aria-invalid={fieldState.invalid}
+                  onInput={setInput}
+                />
+              )}
+            />
             <Input
-              name="name"
               placeholder="Ім'я"
-              value={contacts.name}
-              required
-              onChange={handleInputChange}
+              error={errors.name?.message}
+              aria-invalid={Boolean(errors.name)}
+              {...register('name')}
             />
             <Input
-              name="phone"
-              type="tel"
-              placeholder="Телефон"
-              value={contacts.phone}
-              required
-              onChange={handleInputChange}
-            />
-            <Input
-              name="email"
-              type="email"
               placeholder="Email"
-              value={contacts.email}
-              onChange={handleInputChange}
+              error={errors.email?.message}
+              aria-invalid={Boolean(errors.email)}
+              {...register('email')}
             />
           </div>
         </div>
       </div>
-      <div className="max-w-2xl mx-auto mt-64 space-y-10">
-        <OrderList
-          dishes={dishes}
-          subtotal={subtotal}
-          delivery={delivery}
-          total={total}
-        />
-        <Button
-          className="w-full font-semibold"
-          type="submit"
-          disabled={dishes.length < 1 || isMutating}
-        >
-          {isMutating ? "Зачекайте..." : "Підтвердити замовлення"}
+
+      <div className="mx-auto max-w-2xl">
+        <OrderList className="mb-12" />
+
+        <Button className="w-full" type="submit" disabled={isOrderEmpty}>
+          Підтвердити замовлення
         </Button>
       </div>
     </form>

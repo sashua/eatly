@@ -1,7 +1,9 @@
 {
   "restaurant": {
     "name": "Піца Celentano",
-    "logo": "1uPwOqbZJMA98fVQhMfj2.svg"
+    "description": "Твоя перша піцерія, вона завжди поруч, в який куточок країни ти б не подався",
+    "logo": "celentano-logo.svg",
+    "image": "celentano-image.jpg"
   },
   "dishes": [
     {

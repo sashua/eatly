@@ -1,0 +1,9 @@
+{
+  "singleQuote": true,
+  "quoteProps": "consistent",
+  "arrowParens": "avoid",
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "pluginSearchDirs": false,
+  "tailwindConfig": "tailwind.config.cjs",
+  "tailwindFunctions": ["clsx", "tv"]
+}

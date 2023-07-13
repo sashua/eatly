@@ -1,4 +1,4 @@
-import process from "process";
+import process from 'process';
 
 export const getApiUrl = (
   path: string,
@@ -7,6 +7,6 @@ export const getApiUrl = (
   const searchString = new URLSearchParams(searchParams).toString();
 
   return `${process.env.NEXT_PUBLIC_API_URL}/${path}${
-    searchString ? "?" + searchString : ""
+    searchString ? '?' + searchString : ''
   }`;
 };

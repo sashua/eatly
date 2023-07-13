@@ -1,19 +1,15 @@
-import Link from "next/link";
-import { Logo } from "./Logo";
+import { Logo, Navigation } from '~/components';
+import { OrderPopover } from './OrderPopover';
 
-interface HeaderProps {}
-
-export function Header({}: HeaderProps) {
+export function Header() {
   return (
     <header>
       <div className="container">
-        <nav className="flex border-b py-6">
-          <Logo />
-          <div className="flex ml-auto gap-10">
-            <Link href="/">Меню</Link>
-            <Link href="/cart">Кошик</Link>
-          </div>
-        </nav>
+        <div className="flex items-center border-b pb-6 pt-12">
+          <Logo className="mr-20" />
+          <Navigation className="mr-auto text-neutral-500" />
+          <OrderPopover />
+        </div>
       </div>
     </header>
   );

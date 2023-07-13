@@ -3,7 +3,7 @@ export async function sendRequest(
   { arg }: { arg: Record<string, any> }
 ) {
   const res = await fetch(url, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(arg),
   });
   return res.json();

@@ -1,20 +1,47 @@
-import { NextResponse } from "next/server";
-import { config } from "~/lib/config";
-import { prisma } from "~/lib/prisma";
+import { NextRequest, NextResponse } from 'next/server';
+import { ZodError } from 'zod';
+import { config } from '~/lib/config';
+import { prisma } from '~/lib/prisma';
+import { SearchDishesSchema } from '~/lib/schemas';
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const restaurantId = searchParams.get("rest") || undefined;
-  let page = Number(searchParams.get("page"));
-  let limit = Number(searchParams.get("limit"));
+export async function GET(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const {
+      rest,
+      ids,
+      search,
+      sort = 'name',
+      order = 'asc',
+      page = 1,
+      limit = config.dishes.pageSize,
+    } = SearchDishesSchema.parse(Object.fromEntries(searchParams.entries()));
 
-  page = isNaN(page) || page < 1 ? 1 : page;
-  limit = isNaN(limit) || limit <= 0 ? config.dishesPageSize : limit;
+    const data = await prisma.dish.findMany({
+      where: {
+        restaurantId: rest,
+        id: { in: ids },
+        name: search ? { contains: search, mode: 'insensitive' } : undefined,
+      },
+      orderBy:
+        sort === 'name'
+          ? { name: order }
+          : sort === 'popularity'
+          ? [{ orders: { _count: order } }, { name: 'asc' }]
+          : [{ [sort]: order }, { name: 'asc' }],
+      skip: (page - 1) * limit,
+      take: limit,
+    });
 
-  const data = await prisma.dish.findMany({
-    skip: (page - 1) * limit,
-    take: limit,
-    where: { restaurantId },
-  });
-  return NextResponse.json(data);
+    return NextResponse.json(data);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      console.log('❗️', error.issues);
+      return NextResponse.json(
+        { message: 'Invalid search parameters' },
+        { status: 400 }
+      );
+    }
+    throw error;
+  }
 }

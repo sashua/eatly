@@ -1,71 +1,66 @@
-"use client";
+'use client';
 
-import { Dish } from "@prisma/client";
-import { useCallback, useEffect } from "react";
-import useSWRInfinite from "swr/infinite";
-import { config } from "~/lib/config";
-import { useFilterStore, usePreloadStore } from "~/lib/store";
-import { fetcher, getApiUrl } from "~/lib/utils";
-import { Button } from "./Button";
-import { DishCard } from "./DishCard";
+import { Dish } from '@prisma/client';
+import { useState } from 'react';
+import { MdArrowDownward } from 'react-icons/md';
+import { DishCard, SortBar } from '~/components';
+import { Button } from './common';
+import { useDishesQuery } from '~/lib/hooks';
+import { SearchDishes } from '~/lib/schemas';
+import { useOrderStore, useStore } from '~/lib/store';
 
-export function DishList() {
-  const preloadedDishes = usePreloadStore((store) => store.dishes);
-  const [filter, updateFilter] = useFilterStore((store) => [
-    store.filter,
-    store.update,
-  ]);
+interface DishListProps {
+  initialSearchParams: SearchDishes;
+  initialData: Dish[];
+}
 
-  const getKey = useCallback(
-    (page: number, prevData: Dish[] | null) => {
-      if (prevData && prevData.length < config.dishesPageSize) return null;
-      return getApiUrl("dishes", {
-        ...filter,
-        page: String(page + 1),
-        limit: String(config.dishesPageSize),
-      });
-    },
-    [filter]
+export function DishList({ initialData, initialSearchParams }: DishListProps) {
+  const [searchParams, setSearchParams] = useState(initialSearchParams);
+  const { data, hasNextPage, fetchNextPage } = useDishesQuery(
+    initialData,
+    searchParams
   );
 
-  const { data, isValidating, setSize } = useSWRInfinite<Dish[]>(
-    getKey,
-    fetcher,
-    {
-      fallbackData: [preloadedDishes],
-      revalidateFirstPage: false,
-    }
-  );
+  const orderedDishes = useStore(useOrderStore, s => s.dishes);
+  const addOneDish = useOrderStore(s => s.addOneDish);
 
-  // reset pagination if filter values've been changed
-  useEffect(() => {
-    setSize(1);
-  }, [filter, setSize]);
-
-  const handleLoadMore = () => {
-    setSize((size) => size + 1);
+  const handleSortChange = (
+    sortParams: Pick<SearchDishes, 'sort' | 'order'>
+  ) => {
+    setSearchParams(prev => ({ ...prev, ...sortParams }));
   };
 
-  const dishes = data?.flat();
-  const hasNextPage = (data?.at(-1)?.length ?? 0) >= config.dishesPageSize;
-
+  const orderRestaurantId = orderedDishes?.[0]?.restaurantId;
+  const orderedDishIds = orderedDishes?.map(item => item.id);
   return (
-    <div className="space-y-10">
-      <ul className="grid grid-cols-4 gap-10">
-        {dishes?.map((data) => (
-          <li key={data.id}>
-            <DishCard data={data} />
+    <div className="">
+      <SortBar
+        className="mb-10"
+        initialSortParams={initialSearchParams}
+        onChange={handleSortChange}
+      />
+      <ul className="grid grid-cols-4 gap-8">
+        {data?.pages.flat().map(item => (
+          <li key={item.id}>
+            <DishCard
+              data={item}
+              isOrdered={orderedDishIds?.includes(item.id)}
+              isDisabled={
+                Boolean(orderRestaurantId) &&
+                orderRestaurantId !== item.restaurantId
+              }
+              onAdd={() => addOneDish?.(item)}
+            />
           </li>
         ))}
       </ul>
       {hasNextPage && (
         <Button
-          className="block mx-auto"
-          variant="outline"
-          disabled={isValidating}
-          onClick={handleLoadMore}
+          className="ml-auto mt-10"
+          variant="flat"
+          onClick={() => fetchNextPage()}
         >
-          {isValidating ? "Зачекайте..." : "Більше страв"}
+          More Dishes <MdArrowDownward className="h-5 w-5" />
         </Button>
       )}
     </div>

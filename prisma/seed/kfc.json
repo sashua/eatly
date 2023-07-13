@@ -1,5 +1,10 @@
 {
-  "restaurant": { "name": "KFC", "logo": "hk346qcx-6376myk5Ud4w.svg" },
+  "restaurant": {
+    "name": "KFC",
+    "description": "Ресторан смачної курки",
+    "logo": "kfc-logo.svg",
+    "image": "kfc-image.webp"
+  },
   "dishes": [
     {
       "name": "ШЕФБУРГЕР",
@@ -48,12 +53,6 @@
       "description": "Два соковитих курячих філе, мариновані огірки, сир, соус барбекю та майонез",
       "image": "WLfXrNNu47mLeuyA4038I.jpg",
       "price": 125
-    },
-    {
-      "name": "ЧІЗБУРГЕР ДЖУНІОР",
-      "description": "Пряний гірчичний соус, кетчуп, стріпс оригінальний, сир Чеддер, огірки на пшеничній булочці",
-      "image": "GTNzSmtZ3k3s5LMPXd8OF.png",
-      "price": 55
     },
     {
       "name": "ЧІЗБУРГЕР ДЖУНІОР",
