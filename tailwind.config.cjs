@@ -60,7 +60,7 @@ module.exports = {
     },
     container: { center: true, padding: '2rem' },
     fontFamily: {
-      sans: ['var(--font-golos-text)', 'sans-serif'],
+      sans: ['var(--font-sans-serif)', 'sans-serif'],
     },
     extend: {
       aria: { invalid: 'invalid="true"' },
