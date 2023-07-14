@@ -1,4 +1,3 @@
-import { Dish } from '@prisma/client';
 import {
   DishList,
   Hero,

@@ -12,6 +12,10 @@ export default async function Restaurant({ params }: RestaurantProps) {
     getDishes({ rest: params.id, sort: 'popularity', order: 'desc' }),
   ]);
 
+  if (!restaurant) {
+    return null;
+  }
+
   return (
     <div className="container py-28">
       <div className="mb-20 overflow-hidden rounded-3xl shadow-2xl">

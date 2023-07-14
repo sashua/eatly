@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '~/lib/prisma';
-import { CreateOrder, CreateOrderSchema } from '~/lib/schemas';
+import { CreateOrderSchema } from '~/lib/schemas';
 
 export async function POST(request: Request) {
   const { dishes, ...orderData } = CreateOrderSchema.parse(
