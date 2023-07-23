@@ -12,3 +12,5 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 
 Web application where users can order food delivery
+
+[App link](https://eatly-sashua.vercel.app/) 🚀
