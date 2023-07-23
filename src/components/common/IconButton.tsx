@@ -14,11 +14,11 @@ const iconButton = tv({
         icon: 'h-[1em] w-[1em]',
       },
       md: {
-        base: 'rounded-lg border p-1.5 shadow',
+        base: 'rounded-lg border p-1 shadow sm:p-1.5',
         icon: 'h-[1.25em] w-[1.25em]',
       },
       lg: {
-        base: 'rounded-xl border-2 p-1.5 shadow-md',
+        base: 'rounded-xl border-2 p-1 shadow-md sm:p-1.5',
         icon: 'h-[1.5em] w-[1.5em]',
       },
     },

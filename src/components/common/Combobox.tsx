@@ -1,6 +1,7 @@
 'use client';
 
 import { Combobox as HeadlessCombobox } from '@headlessui/react';
+import dynamic from 'next/dynamic';
 import { Fragment, forwardRef } from 'react';
 import { tv } from 'tailwind-variants';
 
@@ -8,11 +9,11 @@ const combobox = tv({
   slots: {
     base: 'relative z-30',
     input:
-      'peer w-full rounded-xl border bg-white px-6 py-3 outline-none transition-colors focus:border-brand-700 disabled:bg-neutral-200 focus:aria-invalid:border-error',
+      'peer w-full rounded-xl border bg-white px-6 py-3 outline-none transition-colors focus:border-brand-700 disabled:text-neutral-400 focus:aria-invalid:border-error',
     label:
       'absolute left-5 top-0 -translate-y-1/2 bg-white px-1 text-xs leading-none text-neutral-400 transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:bg-white peer-focus:text-xs peer-focus:text-brand-700 peer-focus:peer-aria-invalid:text-error',
     error:
-      'absolute bottom-0 right-5 translate-y-1/2 bg-white px-1 text-xs text-error',
+      'absolute bottom-0 right-5 translate-y-1/2 bg-white px-1 text-xs text-error disabled:text-neutral-400',
     options:
       'absolute inset-x-0 -bottom-2 translate-y-full overflow-hidden rounded-xl bg-brand-50 shadow-md',
     option:

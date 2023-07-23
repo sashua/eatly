@@ -10,16 +10,16 @@ const logo = tv({
   variants: {
     size: {
       sm: {
-        base: 'text-xl',
-        image: 'w-10',
+        base: 'text-lg md:text-xl',
+        image: 'w-8 md:w-10',
       },
       md: {
-        base: 'text-2xl',
-        image: 'w-12',
+        base: 'text-xl md:text-2xl',
+        image: 'w-10 md:w-12',
       },
       lg: {
-        base: 'text-3xl',
-        image: 'w-14',
+        base: 'text-2xl md:text-3xl',
+        image: 'w-12 md:w-14',
       },
     },
   },
@@ -40,10 +40,10 @@ export function Logo({ className, size }: LogoProps) {
       <Image
         className={classes.image()}
         src="/logo.svg"
-        alt="Company logo"
+        alt="Логотип Їжмо!"
         fit="contain"
       />
-      <span>eatly</span>
+      <span>Їжмо!</span>
     </Link>
   );
 }

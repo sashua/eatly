@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const CreateOrderSchema = z.object({
   name: z.string(),
-  email: z.string().email(),
+  phone: z.string(),
   address: z.string(),
   restaurantId: z.string().cuid(),
   restaurantAddress: z.string(),

@@ -18,7 +18,7 @@ const buttons: { label: string; sort: Sort }[] = [
 
 const bar = tv({
   slots: {
-    base: 'flex w-full justify-end text-neutral-300 transition-colors',
+    base: 'flex w-full justify-center text-neutral-300 transition-colors sm:justify-end',
     icon: 'h-5 w-5 transition',
   },
 });

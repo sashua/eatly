@@ -45,7 +45,7 @@ export function ModalDialog({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-90"
           >
-            <Dialog.Panel className="mx-auto max-w-xl space-y-8 rounded-2xl bg-white px-8 pb-6 pt-8">
+            <Dialog.Panel className="mx-auto max-w-xl space-y-6 rounded-2xl bg-white px-6 pb-6 pt-6 sm:space-y-8 sm:px-8 sm:pt-8">
               {title && (
                 <Dialog.Title className="text-2xl font-bold">
                   {title}
@@ -53,14 +53,14 @@ export function ModalDialog({
               )}
               {children && <div>{children}</div>}
               {(acceptText || cancelText) && (
-                <div className="flex justify-end gap-4">
+                <div className="flex justify-center gap-6 sm:gap-8">
                   {acceptText && (
                     <Button variant="solid" onClick={onAccept}>
                       {acceptText}
                     </Button>
                   )}
                   {cancelText && (
-                    <Button variant="bordered" onClick={onClose}>
+                    <Button variant="outline" onClick={onClose}>
                       {cancelText}
                     </Button>
                   )}

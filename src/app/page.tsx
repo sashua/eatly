@@ -1,14 +1,9 @@
-import {
-  DishList,
-  Hero,
-  RestaurantCard,
-  Statistics,
-  Subscription,
-} from '~/components';
-import { getDishes, getRestaurants } from '~/lib/api';
+import { DishList, Hero, RestaurantCard, Statistics } from '~/components';
+import { getDishes, getRestaurants, getStatistics } from '~/lib/api';
 
 export default async function Home() {
-  const [restaurants, dishes] = await Promise.all([
+  const [statistics, restaurants, dishes] = await Promise.all([
+    getStatistics(),
     getRestaurants(),
     getDishes({ sort: 'popularity', order: 'desc' }),
   ]);
@@ -16,14 +11,14 @@ export default async function Home() {
   return (
     <>
       <Hero />
-      <Statistics />
+      {statistics && <Statistics {...statistics} />}
 
-      <section className="border-b py-28">
+      <section className="border-b py-20 md:py-24 xl:py-28">
         <div className="container">
-          <h2 className="mb-20 text-center text-5xl font-semibold">
+          <h2 className="mb-14 text-center text-3xl font-semibold md:mb-16 md:text-4xl xl:mb-20 xl:text-5xl">
             Наші <span className="text-brand">Ресторани</span>
           </h2>
-          <ul className="grid grid-cols-3 gap-8">
+          <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {restaurants.map(data => (
               <li key={data.id}>
                 <RestaurantCard data={data} />
@@ -33,9 +28,9 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="border-b py-28">
+      <section className="py-20 md:py-24 xl:py-28">
         <div className="container">
-          <h2 className="mb-10 text-center text-5xl font-semibold">
+          <h2 className="mb-14 text-center text-3xl font-semibold md:mb-16 md:text-4xl xl:mb-20 xl:text-5xl">
             Наші <span className="text-brand">Страви</span>
           </h2>
           <DishList
@@ -48,7 +43,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <Subscription />
+      {/* <Subscription /> */}
     </>
   );
 }
