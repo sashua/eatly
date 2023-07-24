@@ -1,6 +1,7 @@
 'use client';
 
 import { Popover, Transition } from '@headlessui/react';
+import clsx from 'clsx';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import { MdOutlineShoppingCart, MdRestaurant } from 'react-icons/md';
@@ -9,14 +10,18 @@ import { useOrderStore, useStore } from '~/lib/store';
 import { OrderList } from './OrderList';
 import { Image } from './common';
 
-export function OrderPopover() {
+interface OrderPopoverProps {
+  className?: string;
+}
+
+export function OrderPopover({ className }: OrderPopoverProps) {
   const dishes = useStore(useOrderStore, s => s.dishes);
   const { data: restaurant } = useRestaurantQuery(dishes?.[0]?.restaurantId);
 
   const isOrderEmpty = (dishes?.length ?? 0) === 0;
 
   return (
-    <Popover className="sm:relative sm:z-30">
+    <Popover className={clsx('sm:relative sm:z-30', className)}>
       {({ open, close }) => (
         <>
           <Popover.Button
