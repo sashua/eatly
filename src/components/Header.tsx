@@ -5,10 +5,10 @@ export function Header() {
   return (
     <header>
       <div className="container">
-        <div className="flex items-center justify-between border-b pb-6 pt-6 xl:pt-12">
+        <div className="grid grid-cols-3 items-center border-b pb-6 pt-6 xl:pt-12">
           <Logo />
-          <Navigation className="hidden text-neutral-500 md:block" />
-          <OrderPopover />
+          <Navigation className="hidden place-self-center text-neutral-500 md:block" />
+          <OrderPopover className="place-self-end" />
         </div>
       </div>
     </header>

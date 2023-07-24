@@ -24,6 +24,7 @@ export default async function Restaurant({ params }: RestaurantProps) {
           src={`/images/${restaurant.image}`}
           alt={restaurant.name}
           sizes="100vw"
+          priority
         />
         <div className="flex flex-col gap-2 p-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:p-10">
           <div className="flex items-center justify-between gap-10 sm:flex-row-reverse lg:basis-1/2 lg:flex-row lg:justify-start">

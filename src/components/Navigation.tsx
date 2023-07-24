@@ -10,7 +10,7 @@ const links = [
 
 const navigation = tv({
   slots: {
-    base: 'flex gap-10',
+    base: '',
     link: 'px-2 py-1 transition-colors hover:text-brand',
   },
 });

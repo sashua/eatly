@@ -20,6 +20,7 @@ export function Hero() {
               src="/food-1.png"
               alt="Some food"
               sizes="(max-width: 639px) 60vw, 40vw"
+              priority
             />
           </div>
         </div>
