@@ -3,15 +3,7 @@ import { tv } from 'tailwind-variants';
 
 const links = [
   {
-    label: 'Menu',
-    href: '/',
-  },
-  {
-    label: 'About Us',
-    href: '/',
-  },
-  {
-    label: 'Contact',
+    label: 'Меню',
     href: '/',
   },
 ];

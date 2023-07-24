@@ -14,16 +14,22 @@ export function RestaurantCard({ data }: RestaurantCardProps) {
       className="group block h-full overflow-hidden rounded-3xl bg-white shadow-xl transition-colors hover:bg-brand-100"
       href={`/restaurants/${id}`}
     >
-      <Image className="aspect-[2]" src={`/images/${image}`} alt={name} />
-      <div className="px-8 pb-4 pt-6">
+      <Image
+        className="aspect-[2]"
+        src={`/images/${image}`}
+        alt={name}
+        sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 30vw"
+      />
+      <div className="px-6 pb-4 pt-6 md:px-8">
         <Image
-          className="float-right aspect-[4/3] w-1/5"
+          className="float-right aspect-[4/3] w-1/5 sm:hidden md:block"
           src={`/images/${logo}`}
-          alt="Logo"
+          alt={`Логотип ${name}`}
           fit="contain"
+          sizes="15vw"
         />
         <div>
-          <h3 className="mb-2 text-2xl font-semibold">{name}</h3>
+          <h3 className="mb-2 text-xl font-semibold md:text-2xl">{name}</h3>
           <p className="mb-4 text-sm text-neutral-500">{description}</p>
         </div>
       </div>

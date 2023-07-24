@@ -58,10 +58,17 @@ module.exports = {
         950: '#430707',
       },
     },
-    container: { center: true, padding: '2rem' },
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        lg: '2rem',
+      },
+    },
     fontFamily: {
       sans: ['var(--font-sans-serif)', 'sans-serif'],
     },
+    screens: { sm: '640px', md: '768px', lg: '1024px', xl: '1280px' },
     extend: {
       aria: { invalid: 'invalid="true"' },
     },

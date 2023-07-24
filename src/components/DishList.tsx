@@ -1,13 +1,14 @@
 'use client';
 
 import { Dish } from '@prisma/client';
+import clsx from 'clsx';
 import { useState } from 'react';
 import { MdArrowDownward } from 'react-icons/md';
 import { DishCard, SortBar } from '~/components';
-import { Button } from './common';
 import { useDishesQuery } from '~/lib/hooks';
 import { SearchDishes } from '~/lib/schemas';
 import { useOrderStore, useStore } from '~/lib/store';
+import { Button } from './common';
 
 interface DishListProps {
   initialSearchParams: SearchDishes;
@@ -16,7 +17,7 @@ interface DishListProps {
 
 export function DishList({ initialData, initialSearchParams }: DishListProps) {
   const [searchParams, setSearchParams] = useState(initialSearchParams);
-  const { data, hasNextPage, fetchNextPage } = useDishesQuery(
+  const { data, isLoading, hasNextPage, fetchNextPage } = useDishesQuery(
     initialData,
     searchParams
   );
@@ -35,11 +36,11 @@ export function DishList({ initialData, initialSearchParams }: DishListProps) {
   return (
     <div className="">
       <SortBar
-        className="mb-10"
+        className="mb-6 md:mb-10"
         initialSortParams={initialSearchParams}
         onChange={handleSortChange}
       />
-      <ul className="grid grid-cols-4 gap-8">
+      <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {data?.pages.flat().map(item => (
           <li key={item.id}>
             <DishCard
@@ -56,11 +57,15 @@ export function DishList({ initialData, initialSearchParams }: DishListProps) {
       </ul>
       {hasNextPage && (
         <Button
-          className="ml-auto mt-10"
+          className="ml-auto mt-6 md:mt-10"
           variant="flat"
+          disabled={isLoading}
           onClick={() => fetchNextPage()}
         >
-          More Dishes <MdArrowDownward className="h-5 w-5" />
+          <span>Більше страв</span>
+          <MdArrowDownward
+            className={clsx('h-5 w-5', isLoading && 'animate-bounce')}
+          />
         </Button>
       )}
     </div>

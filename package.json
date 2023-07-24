@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:turbo": "next dev --turbo",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
@@ -13,14 +14,15 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.1",
-    "@headlessui/react": "^1.7.14",
+    "@headlessui/react": "^1.7.15",
     "@hookform/resolvers": "^3.1.1",
     "@prisma/client": "^5.0.0",
     "@tanstack/react-query": "^4.29.12",
     "@tanstack/react-query-devtools": "^4.29.12",
     "clsx": "^1.2.1",
     "deepmerge": "^4.3.1",
-    "next": "^13.4.10",
+    "got": "^13.0.0",
+    "next": "^13.4.12",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.44.3",

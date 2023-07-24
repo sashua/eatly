@@ -1,4 +1,3 @@
-export * from './DeliverySummary';
 export * from './DishCard';
 export * from './DishList';
 export * from './Footer';

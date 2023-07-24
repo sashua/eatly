@@ -15,12 +15,12 @@ const orderList = tv({
   variants: {
     size: {
       sm: {
-        list: 'mb-10 space-y-4',
-        total: 'pb-2 text-xl',
+        list: 'mb-6 space-y-4 sm:mb-10',
+        total: 'pb-2 text-lg sm:text-xl',
       },
       md: {
-        list: 'mb-12 space-y-6',
-        total: 'pb-3 text-2xl',
+        list: 'mb-8 space-y-6 sm:mb-12',
+        total: 'pb-3 text-xl sm:text-2xl',
       },
     },
   },
@@ -31,9 +31,10 @@ type OrderListVariants = VariantProps<typeof orderList>;
 
 interface OrderListProps extends OrderListVariants {
   className?: string;
+  disabled?: boolean;
 }
 
-export function OrderList({ className, size }: OrderListProps) {
+export function OrderList({ className, size, disabled }: OrderListProps) {
   const dishes = useOrderDishesQuery();
   const addOneDish = useOrderStore(s => s.addOneDish);
   const delOneDish = useOrderStore(s => s.delOneDish);
@@ -58,6 +59,7 @@ export function OrderList({ className, size }: OrderListProps) {
             <OrderCard
               data={data}
               size={size}
+              disabled={disabled}
               onAdd={() => addOneDish(data)}
               onDel={() => delOneDish(data)}
             />

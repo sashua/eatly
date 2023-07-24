@@ -38,7 +38,7 @@ model Order {
   id String @id @default(cuid())
 
   name    String
-  email   String
+  phone   String
   address String
 
   restaurantId      String

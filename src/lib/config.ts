@@ -1,6 +1,6 @@
 export const config = {
   dishes: {
-    pageSize: 4,
+    pageSize: 12,
     maxOrderedQuantity: 9,
   },
   map: {

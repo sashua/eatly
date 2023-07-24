@@ -21,7 +21,10 @@ type ButtonVariants = VariantProps<typeof button>;
 
 interface ButtonProps
   extends ButtonVariants,
-    ComponentPropsWithoutRef<'button'> {}
+    ComponentPropsWithoutRef<'button'
+    > {
+  isLoading?: boolean;
+}
 
 export function Button({
   className,
